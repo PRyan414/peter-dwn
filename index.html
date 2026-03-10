@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peter's How Might We — Designing Your Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1612;
+    --paper: #f5f0e8;
+    --cream: #ede7d7;
+    --rust: #b5451b;
+    --gold: #c9973a;
+    --sage: #5a6e58;
+    --dusk: #6b5b7b;
+    --sky: #3d6a8a;
+    --muted: #8a7f72;
+    --border: rgba(26,22,18,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+  }
+
+  /* Header */
+  header {
+    padding: 4rem 3rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: 'HMW';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 14rem;
+    color: var(--cream);
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -0.05em;
+  }
+
+  .eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1.1;
+    max-width: 700px;
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--rust);
+  }
+
+  .subtitle {
+    margin-top: 1.2rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.8;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0;
+    padding: 2rem 3rem 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.25s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .tab:hover { color: var(--ink); }
+  .tab.active {
+    color: var(--rust);
+    border-bottom-color: var(--rust);
+  }
+
+  /* Main content */
+  .main {
+    padding: 3rem;
+    max-width: 1200px;
+  }
+
+  /* Section intro */
+  .section-intro {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--rust);
+  }
+
+  .tension-map {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .tension-side {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    background: var(--cream);
+  }
+
+  .tension-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .tension-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    border: 1px solid currentColor;
+  }
+
+  .tag-value { color: var(--sage); border-color: var(--sage); }
+  .tag-pattern { color: var(--rust); border-color: var(--rust); }
+
+  .tension-arrow {
+    font-size: 1.5rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* HMW Cards grid */
+  .hmw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .hmw-card {
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .hmw-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border-color: var(--gold);
+  }
+
+  .hmw-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+  }
+
+  .card-authenticity::before { background: var(--rust); }
+  .card-health::before { background: var(--sage); }
+  .card-love::before { background: #b5748a; }
+  .card-autonomy::before { background: var(--sky); }
+  .card-growth::before { background: var(--gold); }
+  .card-impact::before { background: #7a6e9e; }
+  .card-peace::before { background: #5e8c8a; }
+  .card-fairness::before { background: #8a6e3d; }
+  .card-identity::before { background: #7a4e6e; }
+  .card-curiosity::before { background: #3d7a6e; }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .card-value-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .card-pattern-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .card-hmw {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .card-hmw strong {
+    font-weight: 300;
+    font-style: italic;
+    color: var(--rust);
+  }
+
+  .card-prompt {
+    margin-top: 1rem;
+    font-size: 0.65rem;
+    color: var(--muted);
+    line-height: 1.7;
+    display: none;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+
+  .hmw-card.expanded .card-prompt { display: block; }
+  .hmw-card.expanded { background: var(--cream); }
+
+  .expand-hint {
+    margin-top: 0.75rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* Star / Pick button */
+  .pick-btn {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.25;
+    transition: opacity 0.2s, transform 0.2s;
+    padding: 0.2rem;
+    z-index: 2;
+  }
+  .pick-btn:hover { opacity: 0.6; transform: scale(1.2); }
+  .pick-btn.picked { opacity: 1; }
+
+  /* Empty picks state */
+  .picks-empty {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 2;
+    border: 1px dashed var(--border);
+  }
+  .picks-empty .big { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--cream); display:block; margin-bottom: 1rem; }
+
+  /* Panel view */
+  .panel {
+    display: none;
+  }
+  .panel.active { display: block; }
+
+  /* Synthesis panel */
+  .synthesis-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .synthesis-cell {
+    background: var(--paper);
+    padding: 1.5rem;
+  }
+
+  .synthesis-cell:first-child {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .synth-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .synthesis-cell:first-child .synth-label { color: var(--cream); opacity: 0.6; }
+
+  .synth-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .synth-body {
+    margin-top: 0.75rem;
+    font-size: 0.68rem;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+
+  /* Reframe block */
+  .reframe-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .reframe-card {
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+  }
+
+  .reframe-from {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.75rem;
+  }
+
+  .reframe-to {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 0.75rem;
+  }
+
+  .reframe-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* Number accent */
+  .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: var(--cream);
+    line-height: 1;
+    float: right;
+    margin-left: 1rem;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: none;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Stagger delays */
+  .hmw-card:nth-child(1) { animation-delay: 0.05s; }
+  .hmw-card:nth-child(2) { animation-delay: 0.1s; }
+  .hmw-card:nth-child(3) { animation-delay: 0.15s; }
+  .hmw-card:nth-child(4) { animation-delay: 0.2s; }
+  .hmw-card:nth-child(5) { animation-delay: 0.25s; }
+  .hmw-card:nth-child(6) { animation-delay: 0.3s; }
+  .hmw-card:nth-child(7) { animation-delay: 0.35s; }
+  .hmw-card:nth-child(8) { animation-delay: 0.4s; }
+  .hmw-card:nth-child(9) { animation-delay: 0.45s; }
+  .hmw-card:nth-child(10) { animation-delay: 0.5s; }
+  .hmw-card:nth-child(11) { animation-delay: 0.55s; }
+  .hmw-card:nth-child(12) { animation-delay: 0.6s; }
+  .hmw-card:nth-child(13) { animation-delay: 0.65s; }
+  .hmw-card:nth-child(14) { animation-delay: 0.7s; }
+  .hmw-card:nth-child(15) { animation-delay: 0.75s; }
+  .hmw-card:nth-child(16) { animation-delay: 0.8s; }
+  .hmw-card:nth-child(17) { animation-delay: 0.85s; }
+  .hmw-card:nth-child(18) { animation-delay: 0.9s; }
+  .hmw-card:nth-child(19) { animation-delay: 0.95s; }
+  .hmw-card:nth-child(20) { animation-delay: 1.0s; }
+  .hmw-card:nth-child(21) { animation-delay: 1.05s; }
+  .hmw-card:nth-child(22) { animation-delay: 1.1s; }
+  .hmw-card:nth-child(23) { animation-delay: 1.15s; }
+  .hmw-card:nth-child(24) { animation-delay: 1.2s; }
+  .hmw-card:nth-child(25) { animation-delay: 1.25s; }
+  .hmw-card:nth-child(26) { animation-delay: 1.3s; }
+  .hmw-card:nth-child(27) { animation-delay: 1.35s; }
+  .hmw-card:nth-child(28) { animation-delay: 1.4s; }
+  .hmw-card:nth-child(29) { animation-delay: 1.45s; }
+  .hmw-card:nth-child(30) { animation-delay: 1.5s; }
+  .hmw-card:nth-child(31) { animation-delay: 1.55s; }
+  .hmw-card:nth-child(32) { animation-delay: 1.6s; }
+
+  @media (max-width: 768px) {
+    header { padding: 2rem 1.5rem 1.5rem; }
+    .main { padding: 1.5rem; }
+    .tabs { padding: 1.5rem 1.5rem 0; }
+    .section-intro { grid-template-columns: 1fr; gap: 1.5rem; }
+    .tension-map { grid-template-columns: 1fr; }
+    .tension-arrow { transform: rotate(90deg); }
+    .synthesis-grid { grid-template-columns: 1fr 1fr; }
+    .reframe-block { grid-template-columns: 1fr; }
+    header::after { font-size: 6rem; opacity: 0.5; }
+  }
+
+  /* ── Journal ─────────────────────────────────────────────────────────── */
+  .journal-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  /* Sidebar: entry list */
+  .journal-sidebar {
+    border: 1px solid var(--border);
+    background: white;
+    position: sticky;
+    top: 1.5rem;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+  }
+
+  .journal-sidebar-header {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .journal-sidebar-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .new-entry-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--ink);
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .new-entry-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .journal-entry-item {
+    padding: 0.9rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .journal-entry-item:hover { background: var(--cream); }
+  .journal-entry-item.active { background: var(--cream); border-left: 3px solid var(--rust); padding-left: calc(1.2rem - 3px); }
+
+  .entry-item-date {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .entry-item-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--ink);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .entry-delete-btn {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 0.15s;
+    padding: 0.2rem;
+    line-height: 1;
+  }
+  .journal-entry-item:hover .entry-delete-btn { opacity: 0.5; }
+  .entry-delete-btn:hover { opacity: 1 !important; color: var(--rust); }
+
+  .journal-empty-sidebar {
+    padding: 2rem 1.2rem;
+    font-size: 0.68rem;
+    color: var(--muted);
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  /* Editor area */
+  .journal-editor-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    background: white;
+  }
+
+  /* Prompt header in editor */
+  .editor-prompt-banner {
+    display: none;
+    padding: 1rem 1.5rem;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .editor-prompt-banner.visible { display: block; }
+
+  .editor-prompt-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .editor-prompt-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .editor-prompt-source {
+    margin-top: 0.35rem;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .editor-prompt-hmw-link {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rust);
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding: 0;
+  }
+  .editor-prompt-hmw-link:hover { border-bottom-color: var(--rust); }
+
+  /* Toolbar */
+  .editor-toolbar {
+    display: flex;
+    gap: 0;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    align-items: center;
+    background: var(--paper);
+  }
+
+  .toolbar-group {
+    display: flex;
+    gap: 0;
+    border-right: 1px solid var(--border);
+    padding-right: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  .toolbar-group:last-child { border-right: none; margin-right: 0; }
+
+  .toolbar-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-radius: 2px;
+    transition: all 0.15s;
+    font-family: 'DM Mono', monospace;
+    line-height: 1;
+    min-width: 28px;
+    text-align: center;
+  }
+  .toolbar-btn:hover { background: var(--cream); color: var(--ink); }
+  .toolbar-btn.active { background: var(--ink); color: var(--paper); }
+
+  .toolbar-btn[data-cmd="bold"] { font-weight: 700; }
+  .toolbar-btn[data-cmd="italic"] { font-style: italic; }
+  .toolbar-btn[data-cmd="underline"] { text-decoration: underline; }
+
+  .toolbar-separator {
+    width: 1px;
+    background: var(--border);
+    margin: 0.2rem 0.3rem;
+    align-self: stretch;
+  }
+
+  /* The actual editable area */
+  .editor-title-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 1.25rem 1.5rem 0.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--ink);
+    background: transparent;
+    resize: none;
+    overflow: hidden;
+  }
+  .editor-title-input::placeholder { color: var(--cream); }
+
+  .editor-date-display {
+    padding: 0 1.5rem 0.75rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .editor-body {
+    min-height: 400px;
+    padding: 1.25rem 1.5rem;
+    outline: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--ink);
+    caret-color: var(--rust);
+  }
+
+  .editor-body:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted);
+    pointer-events: none;
+    font-style: italic;
+  }
+
+  /* Styled content inside editor */
+  .editor-body ul { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+  .editor-body ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+  .editor-body li { margin-bottom: 0.25rem; }
+  .editor-body b, .editor-body strong { font-weight: 600; }
+  .editor-body i, .editor-body em { font-style: italic; }
+  .editor-body u { text-decoration: underline; }
+
+  /* Footer bar */
+  .editor-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--paper);
+  }
+
+  .editor-word-count {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .editor-save-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--ink);
+    padding: 0.45rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .editor-save-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .editor-save-btn.saved { background: var(--sage); color: white; border-color: var(--sage); }
+
+  /* "Journal this" button injected into cards */
+  .journal-this-btn {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    padding: 0.35rem 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .journal-this-btn:hover { background: var(--rust); color: white; border-color: var(--rust); }
+
+  /* No-editor state */
+  .journal-empty-editor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .journal-empty-editor .big-j {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .journal-empty-editor p { font-size: 0.72rem; line-height: 1.9; max-width: 320px; }
+
+  @media (max-width: 768px) {
+    .journal-layout { grid-template-columns: 1fr; }
+    .journal-sidebar { position: static; max-height: 280px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Designing Your Life · Burnett &amp; Evans Method</div>
+  <h1>How Might <em>We</em><br>Help Peter Live<br>by Design?</h1>
+  <p class="subtitle">A structured exploration using the HMW reframe — transforming tensions between core values and recurring thought patterns into generative questions.</p>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('explore')">Explore HMWs</button>
+  <button class="tab" onclick="switchTab('picks')">My Picks <span id="picks-count" style="margin-left:0.35em; opacity:0.55;"></span></button>
+  <button class="tab" onclick="switchTab('tensions')">Tensions Map</button>
+  <button class="tab" onclick="switchTab('synthesis')">Synthesis</button>
+  <button class="tab" onclick="switchTab('reframes')">Reframes</button>
+  <button class="tab" onclick="switchTab('journal')">Journal <span id="journal-count" style="margin-left:0.35em; opacity:0.55;"></span></button>
+</div>
+
+<div class="main">
+
+  <!-- EXPLORE PANEL -->
+  <div id="panel-explore" class="panel active">
+    <div style="margin-bottom:2rem;">
+      <div class="section-label">32 Generative Questions</div>
+      <p style="font-size:0.72rem; color:var(--muted); line-height:1.8; max-width:600px;">Click any card to reveal a reflection prompt. Filter by value or pattern to focus your exploration. <span style="color:var(--rust);">↓ 8 new questions drawn from your Miro boards.</span></p>
+    </div>
+
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+      <button class="filter-btn" onclick="filterCards('authenticity', this)">Authenticity</button>
+      <button class="filter-btn" onclick="filterCards('health', this)">Health</button>
+      <button class="filter-btn" onclick="filterCards('love', this)">Love</button>
+      <button class="filter-btn" onclick="filterCards('autonomy', this)">Autonomy</button>
+      <button class="filter-btn" onclick="filterCards('growth', this)">Growth</button>
+      <button class="filter-btn" onclick="filterCards('impact', this)">Impact</button>
+      <button class="filter-btn" onclick="filterCards('peace', this)">Peace</button>
+      <button class="filter-btn" onclick="filterCards('fairness', this)">Fairness</button>
+      <button class="filter-btn" onclick="filterCards('identity', this)">Identity</button>
+      <button class="filter-btn" onclick="filterCards('curiosity', this)">Curiosity</button>
+    </div>
+
+    <div class="hmw-grid" id="hmw-grid">
+
+      <!-- AUTHENTICITY -->
+      <div class="hmw-card card-authenticity" data-value="authenticity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Authenticity</span>
+          <span class="card-pattern-tag">× self-doubt</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>act from his own voice</strong> before the inner critic gets a vote?</div>
+        <div class="card-prompt">What's one situation this week where you held back what you really thought or felt? What would the most authentic version of you have said or done instead?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-authenticity" data-value="authenticity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Authenticity</span>
+          <span class="card-pattern-tag">× limiting beliefs</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>treat his story as a draft</strong>, not a verdict?</div>
+        <div class="card-prompt">Which belief about yourself feels most fixed right now? If it were just a working hypothesis — not a fact — what would you try differently this month?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- HEALTH -->
+      <div class="hmw-card card-health" data-value="health" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Health</span>
+          <span class="card-pattern-tag">× resistance to change</span>
+        </div>
+        <div class="card-hmw">How might we design a <strong>smallest possible experiment</strong> in health that feels like play, not obligation?</div>
+        <div class="card-prompt">Think of one health habit you've been "meaning to start." What would a 2-minute, zero-willpower version of it look like? Could you run that experiment for just one week?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-health" data-value="health" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Health</span>
+          <span class="card-pattern-tag">× self-doubt</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>build evidence</strong> that his body is on his side?</div>
+        <div class="card-prompt">Name three times in the past year your body served you well — a walk that cleared your head, a good night's sleep that changed your mood. What conditions made those possible?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- LOVE -->
+      <div class="hmw-card card-love" data-value="love" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Love</span>
+          <span class="card-pattern-tag">× fear of wrong decision</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>choose connection</strong> even when the outcome is uncertain?</div>
+        <div class="card-prompt">Is there a relationship — romantic, familial, friendship — where fear of getting it "wrong" is keeping you at a distance? What's the cost of that distance right now?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-love" data-value="love" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Love</span>
+          <span class="card-pattern-tag">× limiting beliefs</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>receive love</strong> as freely as he gives it?</div>
+        <div class="card-prompt">When someone offers you care, appreciation, or help — what's your first instinct? What belief might be making it hard to simply receive it?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- AUTONOMY -->
+      <div class="hmw-card card-autonomy" data-value="autonomy" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Autonomy</span>
+          <span class="card-pattern-tag">× fear of wrong decision</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>distinguish between deciding and committing</strong> so decisions feel lighter?</div>
+        <div class="card-prompt">Identify one decision you've been deferring. What would it look like to make a "good enough for now" choice — with a built-in review date — rather than waiting for certainty?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-autonomy" data-value="autonomy" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Autonomy</span>
+          <span class="card-pattern-tag">× resistance to change</span>
+        </div>
+        <div class="card-hmw">How might we reframe change as <strong>an expression of freedom</strong> rather than a loss of control?</div>
+        <div class="card-prompt">Think of a change you're resisting. Who would you be choosing to become if you leaned into it? Does that person feel more or less free than the current version of you?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- GROWTH -->
+      <div class="hmw-card card-growth" data-value="growth" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Growth</span>
+          <span class="card-pattern-tag">× self-doubt</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>use doubt as data</strong> rather than a stop sign?</div>
+        <div class="card-prompt">What are you doubting yourself about right now? What information would actually resolve that doubt — and is there a small experiment that could generate that information?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-growth" data-value="growth" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Growth</span>
+          <span class="card-pattern-tag">× limiting beliefs</span>
+        </div>
+        <div class="card-hmw">How might we design <strong>safe-to-fail prototypes</strong> that let Peter grow without betting everything?</div>
+        <div class="card-prompt">What's one area of growth you want but fear? What's the lowest-stakes version you could try in the next 30 days — something where "failing" would actually teach you something valuable?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- IMPACT -->
+      <div class="hmw-card card-impact" data-value="impact" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Impact</span>
+          <span class="card-pattern-tag">× self-doubt</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>act on impact impulses</strong> before self-doubt can veto them?</div>
+        <div class="card-prompt">Recall the last time you had an impulse to contribute, help, or create something meaningful — and then talked yourself out of it. What was the self-doubt saying? Was it accurate?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-impact" data-value="impact" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Impact</span>
+          <span class="card-pattern-tag">× fear of wrong decision</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>start making impact</strong> without needing the perfect platform first?</div>
+        <div class="card-prompt">What would it look like to make a meaningful difference for just one person this week — no plan, no audience, no perfect conditions? What stops you from doing that right now?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- PEACE / BALANCE -->
+      <div class="hmw-card card-peace" data-value="peace" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Peace / Balance</span>
+          <span class="card-pattern-tag">× resistance to change</span>
+        </div>
+        <div class="card-hmw">How might we help Peter find <strong>peace within motion</strong> rather than peace as stillness?</div>
+        <div class="card-prompt">What if balance isn't a destination to reach but a practice of returning? What's one small ritual that helps you return to equilibrium — even mid-change, mid-chaos?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-peace" data-value="peace" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Peace / Balance</span>
+          <span class="card-pattern-tag">× limiting beliefs</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>release the belief</strong> that he must earn rest or ease?</div>
+        <div class="card-prompt">Do you find yourself justifying downtime — needing to have "done enough" before allowing yourself to rest? Where did that rule come from? Who gave you that rule, and do you still agree with it?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- FAIRNESS -->
+      <div class="hmw-card card-fairness" data-value="fairness" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Fairness</span>
+          <span class="card-pattern-tag">× self-doubt</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>apply to himself</strong> the same fairness he extends to others?</div>
+        <div class="card-prompt">If a close friend came to you with the exact self-criticism you're directing at yourself, what would you honestly say to them? Why is that response not available to you right now?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-fairness" data-value="fairness" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Fairness</span>
+          <span class="card-pattern-tag">× limiting beliefs</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>notice when the rules he lives by</strong> were written by someone else?</div>
+        <div class="card-prompt">What's one "should" in your life that feels heavy? Whose voice does it sound like? Is it a rule you'd choose if you were writing the rulebook for your own life today?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- CROSS-CUTTING -->
+      <div class="hmw-card card-growth" data-value="growth" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Growth + Autonomy</span>
+          <span class="card-pattern-tag">× fear of wrong decision</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>make more decisions by next Tuesday</strong> — not better ones?</div>
+        <div class="card-prompt">Decision-making is a muscle. What are three low-stakes decisions you've been deferring? Make all three this week. Notice: did the world end? What did you learn?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-authenticity" data-value="authenticity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Authenticity + Impact</span>
+          <span class="card-pattern-tag">× all patterns</span>
+        </div>
+        <div class="card-hmw">How might we help Peter build a life where <strong>being most himself</strong> is also how he contributes most?</div>
+        <div class="card-prompt">When do you feel most fully you AND most useful to others at the same time? What conditions make that overlap possible? How could you engineer more of those moments?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-love" data-value="love" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Love + Peace</span>
+          <span class="card-pattern-tag">× resistance to change</span>
+        </div>
+        <div class="card-hmw">How might we help Peter let <strong>relationships be a source of courage</strong>, not just comfort?</div>
+        <div class="card-prompt">Who in your life has seen you take a real risk? Who would you want in the room when you're considering a big change? Have you actually let them in?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-impact" data-value="impact" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Impact + Fairness</span>
+          <span class="card-pattern-tag">× limiting beliefs</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>reject the belief</strong> that he must be ready before he can contribute?</div>
+        <div class="card-prompt">What would you do if you knew you were ready enough? Not perfect — just enough. What's one contribution you've been delaying until you feel more qualified, confident, or prepared?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-autonomy" data-value="autonomy" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Autonomy + Health</span>
+          <span class="card-pattern-tag">× self-doubt</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>trust his own read</strong> on what his mind and body actually need?</div>
+        <div class="card-prompt">When was the last time you checked in with yourself — not with an app, a framework, or someone else's advice — and just asked: what do I actually need right now? What came up?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-peace" data-value="peace" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Peace + Growth</span>
+          <span class="card-pattern-tag">× all patterns</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>grow without abandoning</strong> the ground beneath his feet?</div>
+        <div class="card-prompt">Growth and stability aren't opposites. What anchors you even when everything else is in flux — a person, a practice, a place, a belief? How intentionally are you maintaining that anchor?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-health" data-value="health" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Health + Authenticity</span>
+          <span class="card-pattern-tag">× limiting beliefs</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>stop performing wellness</strong> and start experiencing it?</div>
+        <div class="card-prompt">Is your health practice something you do for yourself, or something you do to meet a standard? What would health feel like if no one was watching — including you?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-fairness" data-value="fairness" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Fairness + Love</span>
+          <span class="card-pattern-tag">× fear of wrong decision</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>make peace with imperfect choices</strong> in relationships, knowing love is a practice, not a proof?</div>
+        <div class="card-prompt">Where in your relationships are you waiting to act until you're sure you're doing it right? What might it cost the relationship to keep waiting for certainty?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- NEW: IDENTITY / REINVENTION — from Miro "If my job ended TODAY" map -->
+      <div class="hmw-card card-identity" data-value="identity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Identity / Reinvention</span>
+          <span class="card-pattern-tag">× fear of blank canvas</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>see the blank canvas as permission</strong>, not threat?</div>
+        <div class="card-prompt">You named "terror of a blank canvas" directly. What's one version of Peter that could only exist if the current structure fell away? What would he build first — not out of obligation, but out of genuine want?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-identity" data-value="identity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Identity / Autonomy</span>
+          <span class="card-pattern-tag">× role dependency</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>know who he is</strong> separately from what he does?</div>
+        <div class="card-prompt">You asked: "Without my current role, who would I be?" Try answering it — not with job titles or functions, but with values, relationships, and ways of being. Who shows up when the role is removed?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-identity" data-value="identity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Identity + Growth</span>
+          <span class="card-pattern-tag">× gap between wanting and doing</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>close the gap</strong> between "I want to change" and actually changing?</div>
+        <div class="card-prompt">You asked yourself: "How long have I said 'I want to change' and yet I haven't?" That's one of the most honest questions on your board. What's the smallest, most concrete thing you could do differently this week — not someday, this week?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-identity" data-value="identity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Identity + Autonomy</span>
+          <span class="card-pattern-tag">× reinvention</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>design the "independence" version</strong> of his working life before he's forced to?</div>
+        <div class="card-prompt">Your ideal scenario involves being your own boss or choosing contract work on your terms. What would it take to run a 90-day experiment in that direction — not as a leap, but as a prototype?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <!-- NEW: CURIOSITY — from Miro Curiosities Mind Map -->
+      <div class="hmw-card card-curiosity" data-value="curiosity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Curiosity + Growth</span>
+          <span class="card-pattern-tag">× self-doubt</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>follow one curiosity all the way</strong> rather than holding them all lightly?</div>
+        <div class="card-prompt">Your curiosity map is genuinely wide — architecture, sourdough, ocean sailing, woodworking, music, renewable energy. Which one feels most alive right now? What would it look like to go one level deeper on just that one, for 30 days?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-curiosity" data-value="curiosity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Curiosity + Impact</span>
+          <span class="card-pattern-tag">× purpose</span>
+        </div>
+        <div class="card-hmw">How might we help Peter find the <strong>thread connecting his curiosities</strong> to a contribution he's uniquely positioned to make?</div>
+        <div class="card-prompt">Sustainable design, community planning, renewable energy, healthy eating, civil rights history — these aren't random. What cause or community sits at the intersection of all of them? Is there a version of impact that feels like play?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-curiosity" data-value="curiosity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Curiosity + Authenticity</span>
+          <span class="card-pattern-tag">× age limiting belief</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>act on "Can't Sing?" as a question</strong>, not a conclusion?</div>
+        <div class="card-prompt">You listed "Can't Sing?" with a question mark under your Guitar/Music curiosity — alongside "Develop Skills" and "Write Music/Songs." That question mark is doing a lot of work. What would it look like to find out the answer, rather than assume it?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+      <div class="hmw-card card-identity" data-value="identity" onclick="toggleCard(this)">
+        <div class="card-meta">
+          <span class="card-value-tag">Identity + Peace</span>
+          <span class="card-pattern-tag">× purpose and meaning</span>
+        </div>
+        <div class="card-hmw">How might we help Peter <strong>answer his own deepest question</strong> — how to achieve purpose, productivity, and emotional prosperity?</div>
+        <div class="card-prompt">This question appeared at the end of your job-loss mind map, connected by a dashed arrow — the question underneath all the other questions. What does "emotional prosperity" actually feel like to you, in a specific moment you can recall? What conditions created it?</div>
+        <div class="expand-hint">↓ tap to expand</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MY PICKS PANEL -->
+  <div id="panel-picks" class="panel">
+    <div style="margin-bottom:2rem; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <div class="section-label">Your Shortlist</div>
+        <div class="section-title" style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:400;">My <em>Picks</em></div>
+        <p style="font-size:0.72rem; color:var(--muted); line-height:1.9; max-width:500px; margin-top:0.5rem;">Star any card in Explore HMWs to add it here. Your picks are saved and will persist across sessions. Deselect anytime.</p>
+      </div>
+      <button onclick="clearAllPicks()" style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; border:1px solid var(--border); background:none; color:var(--muted); padding:0.5rem 1rem; cursor:pointer;">Clear All</button>
+    </div>
+    <div id="picks-grid" class="hmw-grid"></div>
+  </div>
+
+  <!-- TENSIONS PANEL -->
+  <div id="panel-tensions" class="panel">
+    <div class="section-intro">
+      <div>
+        <div class="section-label">The Generative Gap</div>
+        <div class="section-title">Where <em>values</em> meet<br>recurring patterns</div>
+      </div>
+      <div>
+        <p style="font-size:0.72rem; color:var(--muted); line-height:1.9;">In Designing Your Life, the "How Might We" move starts with a tension — something that's not working — and reframes it as a possibility space. Below is Peter's full tension map: eight values, four recurring thought patterns, and the 24 questions that live in the space between them.</p>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; font-size:0.68rem;">
+      <thead>
+        <tr style="border-bottom:2px solid var(--ink);">
+          <th style="text-align:left; padding:0.75rem 1rem; font-weight:400; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); width:160px;">Value</th>
+          <th style="text-align:left; padding:0.75rem 1rem; font-weight:400; letter-spacing:0.1em; text-transform:uppercase; color:var(--rust);">Self-Doubt</th>
+          <th style="text-align:left; padding:0.75rem 1rem; font-weight:400; letter-spacing:0.1em; text-transform:uppercase; color:var(--sky);">Resistance to Change</th>
+          <th style="text-align:left; padding:0.75rem 1rem; font-weight:400; letter-spacing:0.1em; text-transform:uppercase; color:#7a6e9e;">Fear of Wrong Decision</th>
+          <th style="text-align:left; padding:0.75rem 1rem; font-weight:400; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold);">Limiting Beliefs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:1rem; font-weight:400; color:var(--ink);">Authenticity</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Act from own voice before the critic gets a vote</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">—</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">—</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Treat personal story as a draft, not a verdict</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border); background:var(--cream);">
+          <td style="padding:1rem; font-weight:400; color:var(--ink);">Health</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Build evidence that body is on his side</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Smallest possible experiments as play</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">—</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Stop performing wellness, start experiencing it</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:1rem; font-weight:400; color:var(--ink);">Love</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">—</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Relationships as source of courage, not just comfort</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Choose connection even when outcome is uncertain</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Receive love as freely as he gives it</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border); background:var(--cream);">
+          <td style="padding:1rem; font-weight:400; color:var(--ink);">Autonomy</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Trust his own read on what he needs</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Reframe change as expression of freedom</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Distinguish deciding from committing</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">—</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:1rem; font-weight:400; color:var(--ink);">Growth</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Use doubt as data, not a stop sign</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Grow without abandoning ground beneath feet</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Make more decisions, not better ones</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Safe-to-fail prototypes for growth</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border); background:var(--cream);">
+          <td style="padding:1rem; font-weight:400; color:var(--ink);">Impact</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Act on impact impulses before doubt vetoes them</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">—</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Start making impact without the perfect platform</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Reject "must be ready" before contributing</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:1rem; font-weight:400; color:var(--ink);">Peace / Balance</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">—</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Find peace within motion, not as stillness</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">—</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Release belief that he must earn rest</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border); background:var(--cream);">
+          <td style="padding:1rem; font-weight:400; color:var(--ink);">Fairness</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Apply to himself the fairness he gives others</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">—</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Make peace with imperfect choices in relationships</td>
+          <td style="padding:1rem; color:var(--muted); line-height:1.7;">Notice when rules were written by someone else</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- SYNTHESIS PANEL -->
+  <div id="panel-synthesis" class="panel">
+    <div style="margin-bottom:2rem;">
+      <div class="section-label">Six Core Themes</div>
+      <div class="section-title" style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:400; margin-bottom:1rem;">Reading the <em>pattern beneath the patterns</em></div>
+      <p style="font-size:0.72rem; color:var(--muted); line-height:1.9; max-width:600px;">Across all 32 HMW questions, six recurring design challenges emerge for Peter. These aren't problems to solve — they're terrains to navigate.</p>
+    </div>
+
+    <div class="synthesis-grid">
+      <div class="synthesis-cell">
+        <div class="synth-label">Reading the Map</div>
+        <div class="synth-title" style="font-family:'Playfair Display',serif; font-size:1.2rem;">Peter's Design Challenge</div>
+        <div class="synth-body">The tension between who he is and how he holds himself back. Updated with new material from Peter's Miro boards on identity, reinvention, and curiosity.</div>
+      </div>
+      <div class="synthesis-cell">
+        <div class="synth-label">Theme 01</div>
+        <div class="synth-title">The Inner Critic as Gatekeeper</div>
+        <div class="synth-body">Self-doubt is operating as a permission-granting authority across nearly every domain — impact, authenticity, love, health. The design challenge: demote it from decision-maker to one voice among many.</div>
+      </div>
+      <div class="synthesis-cell">
+        <div class="synth-label">Theme 02</div>
+        <div class="synth-title">Inherited Rules vs. Chosen Values</div>
+        <div class="synth-body">Limiting beliefs show up most strongly around fairness, rest, and readiness. Many appear to be borrowed frameworks — someone else's rules installed in Peter's life. The design challenge: audit and rewrite the rulebook.</div>
+      </div>
+      <div class="synthesis-cell">
+        <div class="synth-label">Theme 03</div>
+        <div class="synth-title">Waiting for Certainty</div>
+        <div class="synth-body">Fear of wrong decisions and resistance to change cluster around transitions, relationships, and growth. The design challenge: shift from seeking the right answer to running the right experiments.</div>
+      </div>
+      <div class="synthesis-cell" style="grid-column: 2;">
+        <div class="synth-label">Theme 04</div>
+        <div class="synth-title">Self-Compassion Deficit</div>
+        <div class="synth-body">Peter's value of fairness coexists with a striking unfairness toward himself — in self-talk, in standards, in rest. The design challenge: make fairness as internal as it is external.</div>
+      </div>
+      <div class="synthesis-cell" style="grid-column: 3;">
+        <div class="synth-label">Theme 05 — from Miro</div>
+        <div class="synth-title">Identity Beyond the Role</div>
+        <div class="synth-body">"Without my current role, who would I be?" is the most charged question on Peter's board. His identity appears tightly bound to his professional function. The design challenge: build a self-concept spacious enough to survive any job ending.</div>
+      </div>
+      <div class="synthesis-cell" style="grid-column: 4;">
+        <div class="synth-label">Theme 06 — from Miro</div>
+        <div class="synth-title">Curiosity as Unlived Life</div>
+        <div class="synth-body">Peter's curiosity map is vast — architecture, music, sailing, sustainable design, history, sourdough. None of these appear to be current pursuits. The design challenge: treat at least one curiosity as a serious prototype, not a someday.</div>
+      </div>
+      <div class="synthesis-cell" style="grid-column: 1 / span 4; background:var(--ink); color:var(--paper);">
+        <div class="synth-label" style="color:var(--cream); opacity:0.6;">The North Star HMW</div>
+        <div class="synth-title" style="font-family:'Playfair Display',serif; font-size:1.3rem; font-style:italic;">"How might we help Peter build a life where being most himself is also how he contributes most — without waiting to be ready, and without needing his current role to tell him who he is?"</div>
+        <div class="synth-body" style="color:var(--cream); opacity:0.7;">This single question holds all eight values, addresses all four patterns, and now integrates the identity and curiosity threads from Peter's Miro boards.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFRAMES PANEL -->
+  <div id="panel-reframes" class="panel">
+    <div style="margin-bottom:2rem;">
+      <div class="section-label">Cognitive Reframes</div>
+      <div class="section-title" style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:400; margin-bottom:1rem;">From <em>stuck story</em> to <em>open question</em></div>
+      <p style="font-size:0.72rem; color:var(--muted); line-height:1.9; max-width:600px;">Each of Peter's four recurring patterns can be reframed using the HMW move. These aren't affirmations — they're genuine questions that open up possibility space.</p>
+    </div>
+
+    <div class="reframe-block">
+      <div class="reframe-card">
+        <div class="reframe-from">Stuck Story: Self-Doubt</div>
+        <div class="reframe-text">"I'm not sure I'm good enough / capable enough / worthy enough to move forward."</div>
+      </div>
+      <div class="reframe-card" style="background:var(--cream);">
+        <div class="reframe-to">Open Question</div>
+        <div class="reframe-text">"How might I treat doubt as a research question rather than a final verdict?"</div>
+      </div>
+    </div>
+
+    <div class="reframe-block">
+      <div class="reframe-card">
+        <div class="reframe-from">Stuck Story: Resistance to Change</div>
+        <div class="reframe-text">"Change is destabilizing. If I move, I'll lose what I have. Better to wait."</div>
+      </div>
+      <div class="reframe-card" style="background:var(--cream);">
+        <div class="reframe-to">Open Question</div>
+        <div class="reframe-text">"How might I find what stays constant so I can move more freely with what changes?"</div>
+      </div>
+    </div>
+
+    <div class="reframe-block">
+      <div class="reframe-card">
+        <div class="reframe-from">Stuck Story: Fear of Wrong Decision</div>
+        <div class="reframe-text">"I need to be certain before I act. A wrong choice could cost me everything."</div>
+      </div>
+      <div class="reframe-card" style="background:var(--cream);">
+        <div class="reframe-to">Open Question</div>
+        <div class="reframe-text">"How might I design decisions as experiments — with review dates and low downside — so I can move sooner?"</div>
+      </div>
+    </div>
+
+    <div class="reframe-block">
+      <div class="reframe-card">
+        <div class="reframe-from">Stuck Story: Limiting Beliefs</div>
+        <div class="reframe-text">"This is just who I am / how things are / what I deserve. It's fixed."</div>
+      </div>
+      <div class="reframe-card" style="background:var(--cream);">
+        <div class="reframe-to">Open Question</div>
+        <div class="reframe-text">"How might I treat this belief as a hypothesis I inherited — and design an experiment to test whether it's actually true?"</div>
+      </div>
+    </div>
+
+    <div class="reframe-block">
+      <div class="reframe-card">
+        <div class="reframe-from">Stuck Story: Identity Dependency — from Miro</div>
+        <div class="reframe-text">"Without my current role, I don't know who I am or what I'd do. The blank canvas is terrifying."</div>
+      </div>
+      <div class="reframe-card" style="background:var(--cream);">
+        <div class="reframe-to">Open Question</div>
+        <div class="reframe-text">"How might I begin sketching the next version of me now — while I still have the safety of the current structure — so reinvention is a choice, not a crisis?"</div>
+      </div>
+    </div>
+
+    <div class="reframe-block">
+      <div class="reframe-card">
+        <div class="reframe-from">Stuck Story: Deferred Curiosity — from Miro</div>
+        <div class="reframe-text">"I have all these interests — architecture, sailing, music, sustainability — but I never really pursue them. Someday."</div>
+      </div>
+      <div class="reframe-card" style="background:var(--cream);">
+        <div class="reframe-to">Open Question</div>
+        <div class="reframe-text">"How might I treat one curiosity as a serious 30-day prototype — not a hobby, not a career pivot, just a real experiment in what it feels like to actually do it?"</div>
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--border); padding:2rem; margin-top:1rem; background:var(--cream);">
+      <div class="section-label" style="margin-bottom:1rem;">The Burnett &amp; Evans Reminder</div>
+      <p style="font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:300; font-style:italic; line-height:1.7; color:var(--ink);">
+        "A well-designed life is a life that makes sense. It's a life in which who you are, what you believe, and what you do all line up together." The HMW question doesn't tell you where to go. It clears the ground so you can actually see where you already want to go.
+      </p>
+    </div>
+  </div>
+
+  <!-- JOURNAL PANEL -->
+  <div id="panel-journal" class="panel">
+    <div style="margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <div class="section-label">Reflection Journal</div>
+        <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:400;">My <em style="color:var(--rust);">Journal</em></div>
+        <p style="font-size:0.72rem; color:var(--muted); line-height:1.9; max-width:500px; margin-top:0.5rem;">Click <strong style="font-weight:500;">"Journal this prompt"</strong> on any card to start a new entry. Entries are saved locally in your browser.</p>
+      </div>
+    </div>
+
+    <div class="journal-layout">
+      <!-- Sidebar -->
+      <div class="journal-sidebar">
+        <div class="journal-sidebar-header">
+          <span class="journal-sidebar-title">Entries</span>
+          <button class="new-entry-btn" onclick="newJournalEntry()">+ New</button>
+        </div>
+        <div id="journal-entry-list">
+          <div class="journal-empty-sidebar">No entries yet.<br>Start from a card prompt<br>or press <strong>+ New</strong>.</div>
+        </div>
+      </div>
+
+      <!-- Editor -->
+      <div id="journal-editor-wrap">
+        <div class="journal-empty-editor" id="journal-empty-state">
+          <span class="big-j">✎</span>
+          <p>Select an entry from the list, or click <strong>"Journal this prompt"</strong> on any card in Explore HMWs to begin writing.</p>
+        </div>
+
+        <div class="journal-editor-area" id="journal-editor" style="display:none;">
+          <!-- Prompt banner -->
+          <div class="editor-prompt-banner" id="editor-prompt-banner">
+            <div class="editor-prompt-label">Reflection prompt</div>
+            <div class="editor-prompt-text" id="editor-prompt-text"></div>
+            <div class="editor-prompt-source" id="editor-prompt-source"></div>
+            <button class="editor-prompt-hmw-link" id="editor-hmw-link" style="display:none;" onclick="goToSourceCard()">↗ View source card</button>
+          </div>
+
+          <!-- Title -->
+          <textarea class="editor-title-input" id="editor-title" rows="1" placeholder="Untitled entry…" oninput="autoResizeTextarea(this); markUnsaved()"></textarea>
+          <div class="editor-date-display" id="editor-date"></div>
+
+          <!-- Formatting toolbar -->
+          <div class="editor-toolbar">
+            <div class="toolbar-group">
+              <button class="toolbar-btn" data-cmd="bold" title="Bold (Ctrl+B)" onclick="execFmt('bold')"><b>B</b></button>
+              <button class="toolbar-btn" data-cmd="italic" title="Italic (Ctrl+I)" onclick="execFmt('italic')"><i>I</i></button>
+              <button class="toolbar-btn" data-cmd="underline" title="Underline (Ctrl+U)" onclick="execFmt('underline')"><u>U</u></button>
+            </div>
+            <div class="toolbar-group">
+              <button class="toolbar-btn" data-cmd="insertUnorderedList" title="Bullet list" onclick="execFmt('insertUnorderedList')">• List</button>
+              <button class="toolbar-btn" data-cmd="insertOrderedList" title="Numbered list" onclick="execFmt('insertOrderedList')">1. List</button>
+            </div>
+            <div class="toolbar-group">
+              <button class="toolbar-btn" data-cmd="indent" title="Indent" onclick="execFmt('indent')">→ Indent</button>
+              <button class="toolbar-btn" data-cmd="outdent" title="Outdent" onclick="execFmt('outdent')">← Out</button>
+            </div>
+            <div class="toolbar-group">
+              <button class="toolbar-btn" title="Clear formatting" onclick="execFmt('removeFormat')" style="font-size:0.7rem;">✕ Clear</button>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="editor-body" id="editor-body" contenteditable="true"
+               data-placeholder="Begin writing here… let the question sit with you."
+               oninput="markUnsaved(); updateWordCount();"
+               onkeydown="handleEditorKeydown(event)"></div>
+
+          <!-- Footer -->
+          <div class="editor-footer">
+            <span class="editor-word-count" id="editor-word-count">0 words</span>
+            <button class="editor-save-btn" id="editor-save-btn" onclick="saveCurrentEntry()">Save Entry</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── State ─────────────────────────────────────────────────────────────────
+  const STORAGE_KEY = 'peter-hmw-picks';
+  const JOURNAL_KEY = 'peter-hmw-journal';
+  let picks = new Set();
+  let journalEntries = [];
+  let currentEntryId = null;
+  let unsaved = false;
+
+  // ── Picks ─────────────────────────────────────────────────────────────────
+  function loadPicks() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) picks = new Set(JSON.parse(raw));
+    } catch (e) { picks = new Set(); }
+    applyPicksToCards();
+    renderPicksPanel();
+    updatePicksCount();
+  }
+
+  function savePicks() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...picks])); } catch (e) {}
+  }
+
+  function cardKey(card) {
+    const hmw = card.querySelector('.card-hmw');
+    return hmw ? hmw.innerText.trim().slice(0, 80) : card.innerHTML.slice(0, 80);
+  }
+
+  function injectStarButtons() {
+    document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
+      if (card.querySelector('.pick-btn')) return;
+      const btn = document.createElement('button');
+      btn.className = 'pick-btn';
+      btn.innerHTML = '&#9733;';
+      btn.title = 'Add to My Picks';
+      btn.addEventListener('click', (e) => { e.stopPropagation(); togglePick(card); });
+      card.style.position = 'relative';
+      card.appendChild(btn);
+
+      const promptEl = card.querySelector('.card-prompt');
+      if (promptEl) {
+        const jBtn = document.createElement('button');
+        jBtn.className = 'journal-this-btn';
+        jBtn.textContent = '\u270e Journal this prompt';
+        jBtn.addEventListener('click', (e) => { e.stopPropagation(); openJournalFromCard(card); });
+        promptEl.appendChild(jBtn);
+      }
+    });
+  }
+
+  function togglePick(card) {
+    const key = cardKey(card);
+    picks.has(key) ? picks.delete(key) : picks.add(key);
+    savePicks(); applyPicksToCards(); renderPicksPanel(); updatePicksCount();
+  }
+
+  function applyPicksToCards() {
+    document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
+      const key = cardKey(card);
+      const btn = card.querySelector('.pick-btn');
+      const picked = picks.has(key);
+      card.classList.toggle('is-picked', picked);
+      if (btn) btn.classList.toggle('picked', picked);
+    });
+  }
+
+  function renderPicksPanel() {
+    const grid = document.getElementById('picks-grid');
+    grid.innerHTML = '';
+    if (picks.size === 0) {
+      grid.innerHTML = '<div class="picks-empty"><span class="big">&#9733;</span>No picks yet.<br>Star any card in <strong>Explore HMWs</strong> to save it here.</div>';
+      return;
+    }
+    document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
+      const key = cardKey(card);
+      if (!picks.has(key)) return;
+      const clone = card.cloneNode(true);
+      clone.removeAttribute('onclick');
+      clone.querySelector('.pick-btn') && clone.querySelector('.pick-btn').remove();
+      clone.querySelector('.journal-this-btn') && clone.querySelector('.journal-this-btn').remove();
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'pick-btn picked';
+      removeBtn.innerHTML = '&#9733;';
+      removeBtn.title = 'Remove from My Picks';
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        picks.delete(key); savePicks(); applyPicksToCards(); renderPicksPanel(); updatePicksCount();
+      });
+      clone.style.position = 'relative';
+      clone.appendChild(removeBtn);
+
+      const clonePrompt = clone.querySelector('.card-prompt');
+      if (clonePrompt) {
+        const jBtn = document.createElement('button');
+        jBtn.className = 'journal-this-btn';
+        jBtn.textContent = '\u270e Journal this prompt';
+        jBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const origCard = [...document.querySelectorAll('#hmw-grid .hmw-card')].find(c => cardKey(c) === key);
+          if (origCard) openJournalFromCard(origCard);
+        });
+        clonePrompt.appendChild(jBtn);
+      }
+
+      clone.addEventListener('click', function() {
+        const wasExpanded = this.classList.contains('expanded');
+        grid.querySelectorAll('.hmw-card').forEach(c => c.classList.remove('expanded'));
+        if (!wasExpanded) this.classList.add('expanded');
+      });
+      clone.style.animation = 'none';
+      clone.style.opacity = '1';
+      clone.style.transform = 'none';
+      grid.appendChild(clone);
+    });
+  }
+
+  function updatePicksCount() {
+    const el = document.getElementById('picks-count');
+    if (el) el.textContent = picks.size > 0 ? '(' + picks.size + ')' : '';
+  }
+
+  function clearAllPicks() {
+    if (picks.size === 0) return;
+    picks.clear(); savePicks(); applyPicksToCards(); renderPicksPanel(); updatePicksCount();
+  }
+
+  // ── Tab switching ─────────────────────────────────────────────────────────
+  function switchTab(id) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('panel-' + id).classList.add('active');
+    if (id === 'picks') renderPicksPanel();
+    if (id === 'journal') renderJournalSidebar();
+  }
+
+  function toggleCard(el) {
+    const wasExpanded = el.classList.contains('expanded');
+    document.querySelectorAll('#hmw-grid .hmw-card').forEach(c => c.classList.remove('expanded'));
+    if (!wasExpanded) el.classList.add('expanded');
+  }
+
+  function filterCards(value, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
+      const show = value === 'all' || card.dataset.value === value;
+      card.style.display = show ? '' : 'none';
+      if (show) card.style.opacity = '';
+    });
+  }
+
+  // ── JOURNAL ───────────────────────────────────────────────────────────────
+  function loadJournal() {
+    try {
+      const raw = localStorage.getItem(JOURNAL_KEY);
+      if (raw) journalEntries = JSON.parse(raw);
+    } catch (e) { journalEntries = []; }
+    updateJournalCount();
+  }
+
+  function saveJournal() {
+    try { localStorage.setItem(JOURNAL_KEY, JSON.stringify(journalEntries)); } catch (e) {}
+    updateJournalCount();
+  }
+
+  function updateJournalCount() {
+    const el = document.getElementById('journal-count');
+    if (el) el.textContent = journalEntries.length > 0 ? '(' + journalEntries.length + ')' : '';
+  }
+
+  function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  }
+
+  function formatDate(isoStr) {
+    return new Date(isoStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function openJournalFromCard(card) {
+    const hmwEl = card.querySelector('.card-hmw');
+    const promptEl = card.querySelector('.card-prompt');
+    const valueTag = card.querySelector('.card-value-tag');
+
+    const hmwText = hmwEl ? hmwEl.innerText.trim() : '';
+    const promptClone = promptEl ? promptEl.cloneNode(true) : null;
+    const jb = promptClone && promptClone.querySelector('.journal-this-btn');
+    if (jb) jb.remove();
+    const promptText = promptClone ? promptClone.innerText.trim() : '';
+    const source = valueTag ? valueTag.innerText.trim() : '';
+
+    // Strip HTML tags from hmwText to use as plain title
+    const tmpDiv = document.createElement('div');
+    tmpDiv.innerHTML = hmwText;
+    const hmwPlain = tmpDiv.innerText.trim();
+
+    const entry = {
+      id: generateId(), title: hmwPlain,
+      prompt: promptText, promptHmw: hmwText, promptSource: source,
+      body: '', date: new Date().toISOString(), updated: new Date().toISOString()
+    };
+    journalEntries.unshift(entry);
+    saveJournal();
+    switchToJournalTab();
+    renderJournalSidebar();
+    openEntry(entry.id);
+    setTimeout(() => { const t = document.getElementById('editor-title'); if (t) t.focus(); }, 120);
+  }
+
+  function switchToJournalTab() {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const journalTab = [...document.querySelectorAll('.tab')].find(t => t.textContent.includes('Journal'));
+    if (journalTab) journalTab.classList.add('active');
+    const panel = document.getElementById('panel-journal');
+    if (panel) panel.classList.add('active');
+  }
+
+  function newJournalEntry() {
+    if (unsaved && currentEntryId) saveCurrentEntry(true);
+    const entry = {
+      id: generateId(), title: '', prompt: '', promptHmw: '', promptSource: '',
+      body: '', date: new Date().toISOString(), updated: new Date().toISOString()
+    };
+    journalEntries.unshift(entry);
+    saveJournal();
+    renderJournalSidebar();
+    openEntry(entry.id);
+    setTimeout(() => { const t = document.getElementById('editor-title'); if (t) t.focus(); }, 80);
+  }
+
+  function openEntry(id) {
+    if (unsaved && currentEntryId && currentEntryId !== id) saveCurrentEntry(true);
+    currentEntryId = id;
+    const entry = journalEntries.find(e => e.id === id);
+    if (!entry) return;
+
+    document.getElementById('journal-empty-state').style.display = 'none';
+    const editorEl = document.getElementById('journal-editor');
+    editorEl.style.display = 'flex';
+    editorEl.style.flexDirection = 'column';
+
+    const banner = document.getElementById('editor-prompt-banner');
+    const hmwLink = document.getElementById('editor-hmw-link');
+    if (entry.prompt) {
+      banner.classList.add('visible');
+      document.getElementById('editor-prompt-text').textContent = entry.prompt;
+      document.getElementById('editor-prompt-source').textContent = entry.promptSource ? '\u2014 ' + entry.promptSource : '';
+      if (entry.promptHmw) {
+        hmwLink.style.display = 'inline-block';
+        banner.dataset.promptHmw = entry.promptHmw;
+      } else {
+        hmwLink.style.display = 'none';
+        delete banner.dataset.promptHmw;
+      }
+    } else {
+      banner.classList.remove('visible');
+      if (hmwLink) hmwLink.style.display = 'none';
+    }
+
+    const titleEl = document.getElementById('editor-title');
+    titleEl.value = entry.title;
+    autoResizeTextarea(titleEl);
+    document.getElementById('editor-date').textContent = formatDate(entry.date);
+    document.getElementById('editor-body').innerHTML = entry.body || '';
+
+    unsaved = false;
+    const saveBtn = document.getElementById('editor-save-btn');
+    saveBtn.textContent = 'Save Entry';
+    saveBtn.classList.remove('saved');
+    updateWordCount();
+
+    document.querySelectorAll('.journal-entry-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.id === id);
+    });
+  }
+
+  function saveCurrentEntry(silent) {
+    if (!currentEntryId) return;
+    const entry = journalEntries.find(e => e.id === currentEntryId);
+    if (!entry) return;
+    entry.title = document.getElementById('editor-title').value.trim();
+    entry.body = document.getElementById('editor-body').innerHTML;
+    entry.updated = new Date().toISOString();
+    saveJournal();
+    renderJournalSidebar();
+    unsaved = false;
+    if (!silent) {
+      const saveBtn = document.getElementById('editor-save-btn');
+      saveBtn.textContent = 'Saved \u2713';
+      saveBtn.classList.add('saved');
+      setTimeout(() => { saveBtn.textContent = 'Save Entry'; saveBtn.classList.remove('saved'); }, 2000);
+    }
+    document.querySelectorAll('.journal-entry-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.id === currentEntryId);
+    });
+  }
+
+  function deleteEntry(id, e) {
+    e.stopPropagation();
+    if (!confirm('Delete this entry? This cannot be undone.')) return;
+    journalEntries = journalEntries.filter(function(e) { return e.id !== id; });
+    saveJournal();
+    if (currentEntryId === id) {
+      currentEntryId = null; unsaved = false;
+      document.getElementById('journal-empty-state').style.display = '';
+      document.getElementById('journal-editor').style.display = 'none';
+    }
+    renderJournalSidebar();
+  }
+
+  function renderJournalSidebar() {
+    const list = document.getElementById('journal-entry-list');
+    if (!list) return;
+    if (journalEntries.length === 0) {
+      list.innerHTML = '<div class="journal-empty-sidebar">No entries yet.<br>Start from a card prompt<br>or press <strong>+ New</strong>.</div>';
+      return;
+    }
+    list.innerHTML = journalEntries.map(function(entry) {
+      const rawTitle = entry.title || entry.promptHmw || 'Untitled entry';
+      const tmp = document.createElement('div');
+      tmp.innerHTML = rawTitle;
+      const label = tmp.innerText.replace(/\*/g, '').slice(0, 65) + (tmp.innerText.length > 65 ? '\u2026' : '');
+      const dateStr = new Date(entry.updated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const isActive = entry.id === currentEntryId;
+      return '<div class="journal-entry-item ' + (isActive ? 'active' : '') + '" data-id="' + entry.id + '" onclick="openEntry(\'' + entry.id + '\')">' +
+        '<div class="entry-item-date">' + dateStr + '</div>' +
+        '<div class="entry-item-title">' + label + '</div>' +
+        '<button class="entry-delete-btn" onclick="deleteEntry(\'' + entry.id + '\', event)" title="Delete">\u2715</button>' +
+        '</div>';
+    }).join('');
+  }
+
+  function goToSourceCard() {
+    const banner = document.getElementById('editor-prompt-banner');
+    const targetHmw = banner && banner.dataset.promptHmw;
+    if (!targetHmw) return;
+
+    // Switch to Explore tab
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const exploreTab = [...document.querySelectorAll('.tab')].find(t => t.textContent.trim().startsWith('Explore'));
+    if (exploreTab) exploreTab.classList.add('active');
+    document.getElementById('panel-explore').classList.add('active');
+
+    // Reset filter to show all cards
+    const allBtn = document.querySelector('.filter-btn');
+    if (allBtn) filterCards('all', allBtn);
+
+    // Find and expand the matching card
+    let foundCard = null;
+    document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
+      const hmwEl = card.querySelector('.card-hmw');
+      if (!hmwEl) return;
+      const tmpDiv = document.createElement('div');
+      tmpDiv.innerHTML = targetHmw;
+      if (hmwEl.innerText.trim() === tmpDiv.innerText.trim()) {
+        foundCard = card;
+      }
+    });
+
+    if (foundCard) {
+      // Collapse any open cards, expand this one
+      document.querySelectorAll('#hmw-grid .hmw-card').forEach(c => c.classList.remove('expanded'));
+      foundCard.classList.add('expanded');
+      // Scroll smoothly to it
+      setTimeout(() => {
+        foundCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Brief highlight flash
+        foundCard.style.transition = 'box-shadow 0.3s';
+        foundCard.style.boxShadow = '0 0 0 3px var(--rust)';
+        setTimeout(() => { foundCard.style.boxShadow = ''; }, 1800);
+      }, 100);
+    }
+  }
+
+  function markUnsaved() {
+    unsaved = true;
+    const btn = document.getElementById('editor-save-btn');
+    if (btn) { btn.textContent = 'Save Entry'; btn.classList.remove('saved'); }
+  }
+
+  function updateWordCount() {
+    const body = document.getElementById('editor-body');
+    if (!body) return;
+    const text = body.innerText.trim();
+    const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+    const el = document.getElementById('editor-word-count');
+    if (el) el.textContent = words + ' word' + (words !== 1 ? 's' : '');
+  }
+
+  function execFmt(cmd) {
+    document.getElementById('editor-body').focus();
+    document.execCommand(cmd, false, null);
+    updateToolbarState();
+    markUnsaved();
+  }
+
+  function updateToolbarState() {
+    ['bold','italic','underline','insertUnorderedList','insertOrderedList'].forEach(function(cmd) {
+      const btn = document.querySelector('.toolbar-btn[data-cmd="' + cmd + '"]');
+      if (btn) btn.classList.toggle('active', document.queryCommandState(cmd));
+    });
+  }
+
+  function handleEditorKeydown(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveCurrentEntry(false); }
+    setTimeout(updateToolbarState, 10);
+  }
+
+  function autoResizeTextarea(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function() {
+    injectStarButtons();
+    loadPicks();
+    loadJournal();
+
+    document.addEventListener('selectionchange', function() {
+      if (document.activeElement && document.activeElement.id === 'editor-body') updateToolbarState();
+    });
+
+    window.addEventListener('beforeunload', function() {
+      if (unsaved && currentEntryId) saveCurrentEntry(true);
+    });
+  });
+</script>
+
+</body>
+</html>
