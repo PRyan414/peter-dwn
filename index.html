@@ -512,6 +512,287 @@
     header::after { font-size: 6rem; opacity: 0.5; }
   }
 
+  /* ── Journal ──────────────────────────────────────────────────────────── */
+  .journal-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .journal-sidebar {
+    border: 1px solid var(--border);
+    background: white;
+  }
+
+  .journal-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .journal-new-btn {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: none;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink);
+    transition: all 0.15s;
+  }
+  .journal-new-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .journal-entry-list { max-height: 600px; overflow-y: auto; }
+
+  .journal-entry-item {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .journal-entry-item:hover { background: var(--cream); }
+  .journal-entry-item.active { background: var(--cream); border-left: 3px solid var(--rust); padding-left: calc(1rem - 2px); }
+
+  .journal-entry-date {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .journal-entry-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .journal-main {
+    border: 1px solid var(--border);
+    background: white;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .journal-prompt-block {
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+    display: none;
+  }
+  .journal-prompt-block.visible { display: block; }
+
+  .journal-prompt-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .journal-prompt-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .journal-prompt-meta {
+    margin-top: 0.6rem;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .journal-prompt-meta a {
+    color: var(--rust);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.58rem;
+  }
+  .journal-prompt-meta a:hover { text-decoration: underline; }
+
+  .journal-editor-header {
+    padding: 1.25rem 1.5rem 0.5rem;
+  }
+
+  .journal-title-input {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .journal-title-input::placeholder { color: var(--muted); opacity: 0.5; }
+
+  .journal-entry-datestamp {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.35rem;
+  }
+
+  .journal-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0.5rem 1.5rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .toolbar-btn {
+    padding: 0.3rem 0.55rem;
+    font-size: 0.72rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    transition: color 0.15s;
+    line-height: 1;
+  }
+  .toolbar-btn:hover { color: var(--ink); }
+  .toolbar-btn.active-format { color: var(--rust); }
+
+  .toolbar-sep {
+    width: 1px;
+    height: 1rem;
+    background: var(--border);
+    margin: 0 0.4rem;
+  }
+
+  .journal-content-area {
+    flex: 1;
+    padding: 1.25rem 1.5rem;
+    min-height: 320px;
+    outline: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--ink);
+    overflow-y: auto;
+  }
+  .journal-content-area:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted);
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .journal-content-area ul, .journal-content-area ol { padding-left: 1.5rem; }
+  .journal-content-area li { margin-bottom: 0.25rem; }
+
+  .journal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--paper);
+  }
+
+  .journal-word-count {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .journal-footer-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+  .journal-delete-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    padding: 0.45rem 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .journal-delete-btn:hover { border-color: var(--rust); color: var(--rust); }
+
+  .journal-save-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--ink);
+    background: none;
+    color: var(--ink);
+    padding: 0.5rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .journal-save-btn:hover { background: var(--ink); color: var(--paper); }
+
+  .journal-autosave-note {
+    font-size: 0.58rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .journal-autosave-note.visible { opacity: 1; }
+
+  .journal-export-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .journal-export-btn:hover { background: var(--sage); color: white; border-color: var(--sage); }
+
+  .journal-empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 2;
+  }
+  .journal-empty-state .big {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--cream);
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .journal-layout { grid-template-columns: 1fr; }
+    .journal-entry-list { max-height: 200px; }
+  }
+
   /* Export button */
   .export-btn {
     margin-left: auto;
@@ -617,6 +898,7 @@
   <button class="tab" onclick="switchTab('tensions')">Tensions Map</button>
   <button class="tab" onclick="switchTab('synthesis')">Synthesis</button>
   <button class="tab" onclick="switchTab('reframes')">Reframes</button>
+  <button class="tab" onclick="switchTab('journal')">My Journal <span id="journal-count" style="margin-left:0.35em; opacity:0.55;"></span></button>
   <button class="export-btn" onclick="exportPDF()" title="Export current tab as PDF">↓ Export PDF</button>
 </div>
 
@@ -1211,6 +1493,78 @@
     </div>
   </div>
 
+  <!-- JOURNAL PANEL -->
+  <div id="panel-journal" class="panel">
+    <div style="margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <div class="section-label">Reflection Journal</div>
+        <div class="section-title" style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:400;">My <em>Journal</em></div>
+        <p style="font-size:0.72rem; color:var(--muted); line-height:1.9; max-width:500px; margin-top:0.4rem;">Click "Journal this prompt" on any card to start a new entry. Entries are saved locally in your browser.</p>
+      </div>
+      <button class="journal-export-btn" onclick="exportJournalJSON()" title="Download all entries as a backup file">↓ Backup Entries</button>
+    </div>
+
+    <div class="journal-layout">
+      <!-- Sidebar -->
+      <div class="journal-sidebar">
+        <div class="journal-sidebar-header">
+          <span>Entries</span>
+          <button class="journal-new-btn" onclick="journalNewEntry()">+ New</button>
+        </div>
+        <div class="journal-entry-list" id="journal-entry-list">
+          <div class="journal-empty-state"><span class="big">✎</span>No entries yet.<br>Click <strong>+ New</strong> to begin.</div>
+        </div>
+      </div>
+
+      <!-- Editor -->
+      <div class="journal-main" id="journal-editor-wrap">
+        <!-- Prompt block (shown when entry linked to an HMW card) -->
+        <div class="journal-prompt-block" id="journal-prompt-block">
+          <div class="journal-prompt-label">Reflection Prompt</div>
+          <div class="journal-prompt-text" id="journal-prompt-text"></div>
+          <div class="journal-prompt-meta" id="journal-prompt-meta"></div>
+        </div>
+
+        <!-- Editor header -->
+        <div class="journal-editor-header">
+          <input type="text" class="journal-title-input" id="journal-title-input" placeholder="Entry title…" oninput="journalMarkDirty()">
+          <div class="journal-entry-datestamp" id="journal-datestamp"></div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="journal-toolbar">
+          <button class="toolbar-btn" onclick="journalFormat('bold')" title="Bold"><strong>B</strong></button>
+          <button class="toolbar-btn" onclick="journalFormat('italic')" title="Italic"><em>I</em></button>
+          <button class="toolbar-btn" onclick="journalFormat('underline')" title="Underline"><u>U</u></button>
+          <div class="toolbar-sep"></div>
+          <button class="toolbar-btn" onclick="journalFormat('insertUnorderedList')" title="Bullet list">• List</button>
+          <button class="toolbar-btn" onclick="journalFormat('insertOrderedList')" title="Numbered list">1. List</button>
+          <div class="toolbar-sep"></div>
+          <button class="toolbar-btn" onclick="journalFormat('indent')" title="Indent">→ Indent</button>
+          <button class="toolbar-btn" onclick="journalFormat('outdent')" title="Outdent">← Out</button>
+          <div class="toolbar-sep"></div>
+          <button class="toolbar-btn" onclick="journalClearFormat()" title="Clear formatting">× Clear</button>
+        </div>
+
+        <!-- Content area -->
+        <div class="journal-content-area" id="journal-content" contenteditable="true"
+             data-placeholder="Begin writing…" oninput="journalMarkDirty()"></div>
+
+        <!-- Footer -->
+        <div class="journal-footer">
+          <div style="display:flex; align-items:center; gap:1.25rem;">
+            <span class="journal-word-count" id="journal-word-count">0 words</span>
+            <span class="journal-autosave-note" id="journal-autosave-note">Saved</span>
+          </div>
+          <div class="journal-footer-actions">
+            <button class="journal-delete-btn" onclick="journalDeleteEntry()">Delete Entry</button>
+            <button class="journal-save-btn" onclick="journalSaveEntry()">Save Entry</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -1420,8 +1774,231 @@
   // ── Init ──────────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     injectStarButtons();
+    injectJournalButtons();
     loadPicks();
+    journalInit();
   });
+
+  // ── Journal ───────────────────────────────────────────────────────────────
+  const JOURNAL_KEY = 'peter-hmw-journal';
+  let journalEntries = [];       // array of entry objects
+  let journalCurrentId = null;   // id of entry being edited
+  let journalDirty = false;
+  let journalAutosaveTimer = null;
+
+  function journalInit() {
+    try {
+      const raw = localStorage.getItem(JOURNAL_KEY);
+      if (raw) journalEntries = JSON.parse(raw);
+    } catch(e) { journalEntries = []; }
+    journalRenderSidebar();
+    journalUpdateCount();
+    if (journalEntries.length > 0) {
+      journalOpenEntry(journalEntries[0].id);
+    }
+  }
+
+  function journalSaveToStorage() {
+    try {
+      localStorage.setItem(JOURNAL_KEY, JSON.stringify(journalEntries));
+    } catch(e) { console.error('Journal save failed', e); }
+  }
+
+  function journalUpdateCount() {
+    const el = document.getElementById('journal-count');
+    if (el) el.textContent = journalEntries.length > 0 ? `(${journalEntries.length})` : '';
+  }
+
+  function journalRenderSidebar() {
+    const list = document.getElementById('journal-entry-list');
+    if (!list) return;
+    if (journalEntries.length === 0) {
+      list.innerHTML = '<div class="journal-empty-state"><span class="big">✎</span>No entries yet.<br>Click <strong>+ New</strong> to begin.</div>';
+      return;
+    }
+    list.innerHTML = journalEntries.map(e => {
+      const dateStr = new Date(e.created).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }).toUpperCase();
+      const preview = e.title || (e.content ? e.content.replace(/<[^>]+>/g,'').slice(0, 60) + '…' : 'Untitled');
+      return `<div class="journal-entry-item${e.id === journalCurrentId ? ' active' : ''}" onclick="journalOpenEntry('${e.id}')">
+        <div class="journal-entry-date">${dateStr}</div>
+        <div class="journal-entry-title">${preview}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function journalOpenEntry(id) {
+    if (journalDirty && journalCurrentId) journalSaveEntry(true); // silent save before switching
+    const entry = journalEntries.find(e => e.id === id);
+    if (!entry) return;
+    journalCurrentId = id;
+
+    document.getElementById('journal-title-input').value = entry.title || '';
+    document.getElementById('journal-content').innerHTML = entry.content || '';
+    document.getElementById('journal-datestamp').textContent = new Date(entry.created)
+      .toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' }).toUpperCase();
+
+    // Prompt block
+    const promptBlock = document.getElementById('journal-prompt-block');
+    const promptText  = document.getElementById('journal-prompt-text');
+    const promptMeta  = document.getElementById('journal-prompt-meta');
+    if (entry.prompt) {
+      promptText.textContent = entry.prompt;
+      promptMeta.innerHTML = `— ${entry.promptValue || ''}<br><a href="#" onclick="journalViewSourceCard(event, '${entry.promptCardKey}')">↗ View Source Card</a>`;
+      promptBlock.classList.add('visible');
+    } else {
+      promptBlock.classList.remove('visible');
+    }
+
+    journalUpdateWordCount();
+    journalDirty = false;
+    journalRenderSidebar();
+  }
+
+  function journalNewEntry(prompt, promptValue, promptCardKey) {
+    if (journalDirty && journalCurrentId) journalSaveEntry(true);
+    const id = 'j_' + Date.now();
+    const entry = {
+      id,
+      title: prompt ? '' : '',
+      content: '',
+      prompt: prompt || null,
+      promptValue: promptValue || null,
+      promptCardKey: promptCardKey || null,
+      created: new Date().toISOString(),
+      updated: new Date().toISOString()
+    };
+    journalEntries.unshift(entry);
+    journalSaveToStorage();
+    journalUpdateCount();
+    journalCurrentId = id;
+    journalDirty = false;
+
+    // Switch to journal tab
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.tab[onclick*="journal"]').classList.add('active');
+    document.getElementById('panel-journal').classList.add('active');
+
+    journalOpenEntry(id);
+    setTimeout(() => document.getElementById('journal-title-input').focus(), 50);
+  }
+
+  function journalSaveEntry(silent = false) {
+    const entry = journalEntries.find(e => e.id === journalCurrentId);
+    if (!entry) return;
+    entry.title   = document.getElementById('journal-title-input').value.trim();
+    entry.content = document.getElementById('journal-content').innerHTML;
+    entry.updated = new Date().toISOString();
+    journalSaveToStorage();
+    journalDirty = false;
+    journalRenderSidebar();
+    if (!silent) {
+      const note = document.getElementById('journal-autosave-note');
+      note.textContent = 'Saved';
+      note.classList.add('visible');
+      setTimeout(() => note.classList.remove('visible'), 2000);
+    }
+  }
+
+  function journalMarkDirty() {
+    journalDirty = true;
+    journalUpdateWordCount();
+    clearTimeout(journalAutosaveTimer);
+    journalAutosaveTimer = setTimeout(() => journalSaveEntry(true), 2000);
+  }
+
+  function journalDeleteEntry() {
+    if (!journalCurrentId) return;
+    if (!confirm('Delete this entry? This cannot be undone.')) return;
+    journalEntries = journalEntries.filter(e => e.id !== journalCurrentId);
+    journalSaveToStorage();
+    journalUpdateCount();
+    journalCurrentId = null;
+    journalDirty = false;
+    // Clear editor
+    document.getElementById('journal-title-input').value = '';
+    document.getElementById('journal-content').innerHTML = '';
+    document.getElementById('journal-datestamp').textContent = '';
+    document.getElementById('journal-prompt-block').classList.remove('visible');
+    journalUpdateWordCount();
+    journalRenderSidebar();
+    if (journalEntries.length > 0) journalOpenEntry(journalEntries[0].id);
+  }
+
+  function journalUpdateWordCount() {
+    const text = document.getElementById('journal-content').innerText || '';
+    const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+    document.getElementById('journal-word-count').textContent = `${words} word${words !== 1 ? 's' : ''}`;
+  }
+
+  function journalFormat(cmd) {
+    document.getElementById('journal-content').focus();
+    document.execCommand(cmd, false, null);
+    journalMarkDirty();
+  }
+
+  function journalClearFormat() {
+    document.getElementById('journal-content').focus();
+    document.execCommand('removeFormat', false, null);
+    journalMarkDirty();
+  }
+
+  function journalViewSourceCard(e, cardKey) {
+    e.preventDefault();
+    if (!cardKey) return;
+    // Switch to explore tab and expand the matching card
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.tab[onclick*="explore"]').classList.add('active');
+    document.getElementById('panel-explore').classList.add('active');
+    document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
+      if (cardKey && card.querySelector('.card-hmw') && card.querySelector('.card-hmw').innerText.trim().slice(0,80) === cardKey) {
+        card.classList.add('expanded');
+        setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'center' }), 100);
+      }
+    });
+  }
+
+  // ── Inject "Journal this prompt" buttons into HMW cards ──────────────────
+  function injectJournalButtons() {
+    document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
+      if (card.querySelector('.journal-prompt-btn')) return;
+      const prompt    = card.querySelector('.card-prompt')?.innerText?.trim() || '';
+      const valueTag  = card.querySelector('.card-value-tag')?.innerText?.trim() || '';
+      const cardKey   = card.querySelector('.card-hmw')?.innerText?.trim().slice(0,80) || '';
+
+      const btn = document.createElement('button');
+      btn.className = 'journal-prompt-btn';
+      btn.textContent = '✎ Journal this prompt';
+      btn.style.cssText = `
+        display:block; margin-top:0.85rem; padding:0.3rem 0.65rem;
+        font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:0.12em;
+        text-transform:uppercase; border:1px solid var(--border); background:none;
+        color:var(--muted); cursor:pointer; transition:all 0.15s; width:100%;
+      `;
+      btn.addEventListener('mouseenter', () => { btn.style.background='var(--ink)'; btn.style.color='var(--paper)'; btn.style.borderColor='var(--ink)'; });
+      btn.addEventListener('mouseleave', () => { btn.style.background='none'; btn.style.color='var(--muted)'; btn.style.borderColor='var(--border)'; });
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        journalNewEntry(prompt, valueTag, cardKey);
+      });
+
+      const promptEl = card.querySelector('.card-prompt');
+      if (promptEl) promptEl.appendChild(btn);
+    });
+  }
+
+  // ── Export journal as JSON backup ─────────────────────────────────────────
+  function exportJournalJSON() {
+    if (journalEntries.length === 0) { alert('No journal entries to export.'); return; }
+    const blob = new Blob([JSON.stringify(journalEntries, null, 2)], { type:'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `peter-journal-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 </script>
 
 </body>
