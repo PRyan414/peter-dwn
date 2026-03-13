@@ -512,345 +512,95 @@
     header::after { font-size: 6rem; opacity: 0.5; }
   }
 
-  /* ── Journal ─────────────────────────────────────────────────────────── */
-  .journal-layout {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 2rem;
-    align-items: start;
-  }
-
-  /* Sidebar: entry list */
-  .journal-sidebar {
-    border: 1px solid var(--border);
-    background: white;
-    position: sticky;
-    top: 1.5rem;
-    max-height: calc(100vh - 6rem);
-    overflow-y: auto;
-  }
-
-  .journal-sidebar-header {
-    padding: 1rem 1.2rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .journal-sidebar-title {
+  /* Export button */
+  .export-btn {
+    margin-left: auto;
+    padding: 0.5rem 1.1rem;
     font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .new-entry-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     border: 1px solid var(--border);
     background: none;
-    color: var(--ink);
-    padding: 0.3rem 0.7rem;
     cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
     transition: all 0.2s;
+    white-space: nowrap;
+    align-self: center;
   }
-  .new-entry-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-
-  .journal-entry-item {
-    padding: 0.9rem 1.2rem;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: background 0.15s;
-    position: relative;
-  }
-  .journal-entry-item:hover { background: var(--cream); }
-  .journal-entry-item.active { background: var(--cream); border-left: 3px solid var(--rust); padding-left: calc(1.2rem - 3px); }
-
-  .entry-item-date {
-    font-size: 0.58rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin-bottom: 0.25rem;
+  .export-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
   }
 
-  .entry-item-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.9rem;
-    font-weight: 300;
-    font-style: italic;
-    line-height: 1.4;
-    color: var(--ink);
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+  /* ── Print / PDF styles ────────────────────────────────────────────── */
+  @media print {
+    /* Reset */
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+    body::before { display: none; }         /* no grain */
+    header::after { display: none; }        /* no giant "HMW" watermark */
+
+    .tabs, .export-btn, .filter-bar,
+    .expand-hint, .pick-btn { display: none !important; }
+
+    header {
+      padding: 1.5rem 2rem 1rem;
+      page-break-after: avoid;
+    }
+
+    h1 { font-size: 2rem; }
+
+    .main { padding: 1rem 2rem; max-width: 100%; }
+
+    /* Hide all panels except the one being printed */
+    .panel { display: none !important; }
+    .panel.print-target { display: block !important; }
+
+    /* Cards: allow page breaks between, never inside */
+    .hmw-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .hmw-card {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      box-shadow: none !important;
+    }
+
+    /* Always show reflection prompts in print */
+    .card-prompt { display: block !important; }
+
+    /* Tensions table */
+    table { font-size: 0.62rem; }
+    td, th { padding: 0.5rem 0.6rem !important; }
+
+    /* Synthesis grid */
+    .synthesis-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* Reframes */
+    .reframe-block { page-break-inside: avoid; break-inside: avoid; }
+
+    /* Print header note */
+    .print-header-note {
+      display: block !important;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    @page {
+      margin: 1.5cm 1.5cm 2cm;
+      size: A4;
+    }
   }
 
-  .entry-delete-btn {
-    position: absolute;
-    top: 0.6rem;
-    right: 0.6rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 0.75rem;
-    color: var(--muted);
-    opacity: 0;
-    transition: opacity 0.15s;
-    padding: 0.2rem;
-    line-height: 1;
-  }
-  .journal-entry-item:hover .entry-delete-btn { opacity: 0.5; }
-  .entry-delete-btn:hover { opacity: 1 !important; color: var(--rust); }
-
-  .journal-empty-sidebar {
-    padding: 2rem 1.2rem;
-    font-size: 0.68rem;
-    color: var(--muted);
-    line-height: 1.8;
-    text-align: center;
-  }
-
-  /* Editor area */
-  .journal-editor-area {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    border: 1px solid var(--border);
-    background: white;
-  }
-
-  /* Prompt header in editor */
-  .editor-prompt-banner {
-    display: none;
-    padding: 1rem 1.5rem;
-    background: var(--cream);
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .editor-prompt-banner.visible { display: block; }
-
-  .editor-prompt-label {
-    font-size: 0.58rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.4rem;
-  }
-
-  .editor-prompt-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    font-weight: 300;
-    font-style: italic;
-    line-height: 1.6;
-    color: var(--ink);
-  }
-
-  .editor-prompt-source {
-    margin-top: 0.35rem;
-    font-size: 0.6rem;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-  }
-
-  .editor-prompt-hmw-link {
-    display: inline-block;
-    margin-top: 0.6rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.58rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--rust);
-    cursor: pointer;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.2s;
-    background: none;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    padding: 0;
-  }
-  .editor-prompt-hmw-link:hover { border-bottom-color: var(--rust); }
-
-  /* Toolbar */
-  .editor-toolbar {
-    display: flex;
-    gap: 0;
-    padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-    align-items: center;
-    background: var(--paper);
-  }
-
-  .toolbar-group {
-    display: flex;
-    gap: 0;
-    border-right: 1px solid var(--border);
-    padding-right: 0.5rem;
-    margin-right: 0.5rem;
-  }
-  .toolbar-group:last-child { border-right: none; margin-right: 0; }
-
-  .toolbar-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.3rem 0.5rem;
-    font-size: 0.8rem;
-    color: var(--muted);
-    border-radius: 2px;
-    transition: all 0.15s;
-    font-family: 'DM Mono', monospace;
-    line-height: 1;
-    min-width: 28px;
-    text-align: center;
-  }
-  .toolbar-btn:hover { background: var(--cream); color: var(--ink); }
-  .toolbar-btn.active { background: var(--ink); color: var(--paper); }
-
-  .toolbar-btn[data-cmd="bold"] { font-weight: 700; }
-  .toolbar-btn[data-cmd="italic"] { font-style: italic; }
-  .toolbar-btn[data-cmd="underline"] { text-decoration: underline; }
-
-  .toolbar-separator {
-    width: 1px;
-    background: var(--border);
-    margin: 0.2rem 0.3rem;
-    align-self: stretch;
-  }
-
-  /* The actual editable area */
-  .editor-title-input {
-    width: 100%;
-    border: none;
-    outline: none;
-    padding: 1.25rem 1.5rem 0.5rem;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    font-weight: 400;
-    color: var(--ink);
-    background: transparent;
-    resize: none;
-    overflow: hidden;
-  }
-  .editor-title-input::placeholder { color: var(--cream); }
-
-  .editor-date-display {
-    padding: 0 1.5rem 0.75rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .editor-body {
-    min-height: 400px;
-    padding: 1.25rem 1.5rem;
-    outline: none;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    font-weight: 300;
-    line-height: 1.85;
-    color: var(--ink);
-    caret-color: var(--rust);
-  }
-
-  .editor-body:empty::before {
-    content: attr(data-placeholder);
-    color: var(--muted);
-    pointer-events: none;
-    font-style: italic;
-  }
-
-  /* Styled content inside editor */
-  .editor-body ul { margin-left: 1.5rem; margin-bottom: 0.75rem; }
-  .editor-body ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
-  .editor-body li { margin-bottom: 0.25rem; }
-  .editor-body b, .editor-body strong { font-weight: 600; }
-  .editor-body i, .editor-body em { font-style: italic; }
-  .editor-body u { text-decoration: underline; }
-
-  /* Footer bar */
-  .editor-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1.5rem;
-    border-top: 1px solid var(--border);
-    background: var(--paper);
-  }
-
-  .editor-word-count {
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-
-  .editor-save-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    border: 1px solid var(--border);
-    background: none;
-    color: var(--ink);
-    padding: 0.45rem 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .editor-save-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .editor-save-btn.saved { background: var(--sage); color: white; border-color: var(--sage); }
-
-  /* "Journal this" button injected into cards */
-  .journal-this-btn {
-    display: inline-block;
-    margin-top: 0.75rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.58rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    border: 1px solid var(--border);
-    background: none;
-    color: var(--muted);
-    padding: 0.35rem 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .journal-this-btn:hover { background: var(--rust); color: white; border-color: var(--rust); }
-
-  /* No-editor state */
-  .journal-empty-editor {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 400px;
-    text-align: center;
-    padding: 3rem;
-    color: var(--muted);
-    border: 1px solid var(--border);
-  }
-  .journal-empty-editor .big-j {
-    font-family: 'Playfair Display', serif;
-    font-size: 5rem;
-    color: var(--cream);
-    line-height: 1;
-    margin-bottom: 1.5rem;
-    display: block;
-  }
-  .journal-empty-editor p { font-size: 0.72rem; line-height: 1.9; max-width: 320px; }
-
-  @media (max-width: 768px) {
-    .journal-layout { grid-template-columns: 1fr; }
-    .journal-sidebar { position: static; max-height: 280px; }
-  }
+  .print-header-note { display: none; }
 </style>
 </head>
 <body>
@@ -861,13 +611,13 @@
   <p class="subtitle">A structured exploration using the HMW reframe — transforming tensions between core values and recurring thought patterns into generative questions.</p>
 </header>
 
-<div class="tabs">
+<div class="tabs" style="align-items:center;">
   <button class="tab active" onclick="switchTab('explore')">Explore HMWs</button>
   <button class="tab" onclick="switchTab('picks')">My Picks <span id="picks-count" style="margin-left:0.35em; opacity:0.55;"></span></button>
   <button class="tab" onclick="switchTab('tensions')">Tensions Map</button>
   <button class="tab" onclick="switchTab('synthesis')">Synthesis</button>
   <button class="tab" onclick="switchTab('reframes')">Reframes</button>
-  <button class="tab" onclick="switchTab('journal')">Journal <span id="journal-count" style="margin-left:0.35em; opacity:0.55;"></span></button>
+  <button class="export-btn" onclick="exportPDF()" title="Export current tab as PDF">↓ Export PDF</button>
 </div>
 
 <div class="main">
@@ -1461,212 +1211,147 @@
     </div>
   </div>
 
-  <!-- JOURNAL PANEL -->
-  <div id="panel-journal" class="panel">
-    <div style="margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
-      <div>
-        <div class="section-label">Reflection Journal</div>
-        <div style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:400;">My <em style="color:var(--rust);">Journal</em></div>
-        <p style="font-size:0.72rem; color:var(--muted); line-height:1.9; max-width:500px; margin-top:0.5rem;">Click <strong style="font-weight:500;">"Journal this prompt"</strong> on any card to start a new entry. Entries are saved locally in your browser.</p>
-      </div>
-    </div>
-
-    <div class="journal-layout">
-      <!-- Sidebar -->
-      <div class="journal-sidebar">
-        <div class="journal-sidebar-header">
-          <span class="journal-sidebar-title">Entries</span>
-          <button class="new-entry-btn" onclick="newJournalEntry()">+ New</button>
-        </div>
-        <div id="journal-entry-list">
-          <div class="journal-empty-sidebar">No entries yet.<br>Start from a card prompt<br>or press <strong>+ New</strong>.</div>
-        </div>
-      </div>
-
-      <!-- Editor -->
-      <div id="journal-editor-wrap">
-        <div class="journal-empty-editor" id="journal-empty-state">
-          <span class="big-j">✎</span>
-          <p>Select an entry from the list, or click <strong>"Journal this prompt"</strong> on any card in Explore HMWs to begin writing.</p>
-        </div>
-
-        <div class="journal-editor-area" id="journal-editor" style="display:none;">
-          <!-- Prompt banner -->
-          <div class="editor-prompt-banner" id="editor-prompt-banner">
-            <div class="editor-prompt-label">Reflection prompt</div>
-            <div class="editor-prompt-text" id="editor-prompt-text"></div>
-            <div class="editor-prompt-source" id="editor-prompt-source"></div>
-            <button class="editor-prompt-hmw-link" id="editor-hmw-link" style="display:none;" onclick="goToSourceCard()">↗ View source card</button>
-          </div>
-
-          <!-- Title -->
-          <textarea class="editor-title-input" id="editor-title" rows="1" placeholder="Untitled entry…" oninput="autoResizeTextarea(this); markUnsaved()"></textarea>
-          <div class="editor-date-display" id="editor-date"></div>
-
-          <!-- Formatting toolbar -->
-          <div class="editor-toolbar">
-            <div class="toolbar-group">
-              <button class="toolbar-btn" data-cmd="bold" title="Bold (Ctrl+B)" onclick="execFmt('bold')"><b>B</b></button>
-              <button class="toolbar-btn" data-cmd="italic" title="Italic (Ctrl+I)" onclick="execFmt('italic')"><i>I</i></button>
-              <button class="toolbar-btn" data-cmd="underline" title="Underline (Ctrl+U)" onclick="execFmt('underline')"><u>U</u></button>
-            </div>
-            <div class="toolbar-group">
-              <button class="toolbar-btn" data-cmd="insertUnorderedList" title="Bullet list" onclick="execFmt('insertUnorderedList')">• List</button>
-              <button class="toolbar-btn" data-cmd="insertOrderedList" title="Numbered list" onclick="execFmt('insertOrderedList')">1. List</button>
-            </div>
-            <div class="toolbar-group">
-              <button class="toolbar-btn" data-cmd="indent" title="Indent" onclick="execFmt('indent')">→ Indent</button>
-              <button class="toolbar-btn" data-cmd="outdent" title="Outdent" onclick="execFmt('outdent')">← Out</button>
-            </div>
-            <div class="toolbar-group">
-              <button class="toolbar-btn" title="Clear formatting" onclick="execFmt('removeFormat')" style="font-size:0.7rem;">✕ Clear</button>
-            </div>
-          </div>
-
-          <!-- Body -->
-          <div class="editor-body" id="editor-body" contenteditable="true"
-               data-placeholder="Begin writing here… let the question sit with you."
-               oninput="markUnsaved(); updateWordCount();"
-               onkeydown="handleEditorKeydown(event)"></div>
-
-          <!-- Footer -->
-          <div class="editor-footer">
-            <span class="editor-word-count" id="editor-word-count">0 words</span>
-            <button class="editor-save-btn" id="editor-save-btn" onclick="saveCurrentEntry()">Save Entry</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 <script>
-  // ── State ─────────────────────────────────────────────────────────────────
+  // ── Persistent picks via localStorage ────────────────────────────────────
   const STORAGE_KEY = 'peter-hmw-picks';
-  const JOURNAL_KEY = 'peter-hmw-journal';
   let picks = new Set();
-  let journalEntries = [];
-  let currentEntryId = null;
-  let unsaved = false;
 
-  // ── Picks ─────────────────────────────────────────────────────────────────
-  function loadPicks() {
+  async function loadPicks() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) picks = new Set(JSON.parse(raw));
-    } catch (e) { picks = new Set(); }
+    } catch (e) {
+      picks = new Set();
+    }
     applyPicksToCards();
     renderPicksPanel();
     updatePicksCount();
   }
 
-  function savePicks() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...picks])); } catch (e) {}
+  async function savePicks() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...picks]));
+    } catch (e) {
+      console.error('Could not save picks:', e);
+    }
   }
 
+  // ── Card identity: use the HMW text as a stable key ──────────────────────
   function cardKey(card) {
     const hmw = card.querySelector('.card-hmw');
     return hmw ? hmw.innerText.trim().slice(0, 80) : card.innerHTML.slice(0, 80);
   }
 
+  // ── Inject star buttons into all cards ───────────────────────────────────
   function injectStarButtons() {
     document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
       if (card.querySelector('.pick-btn')) return;
       const btn = document.createElement('button');
       btn.className = 'pick-btn';
-      btn.innerHTML = '&#9733;';
+      btn.innerHTML = '★';
       btn.title = 'Add to My Picks';
-      btn.addEventListener('click', (e) => { e.stopPropagation(); togglePick(card); });
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        togglePick(card);
+      });
       card.style.position = 'relative';
       card.appendChild(btn);
-
-      const promptEl = card.querySelector('.card-prompt');
-      if (promptEl) {
-        const jBtn = document.createElement('button');
-        jBtn.className = 'journal-this-btn';
-        jBtn.textContent = '\u270e Journal this prompt';
-        jBtn.addEventListener('click', (e) => { e.stopPropagation(); openJournalFromCard(card); });
-        promptEl.appendChild(jBtn);
-      }
     });
   }
 
   function togglePick(card) {
     const key = cardKey(card);
-    picks.has(key) ? picks.delete(key) : picks.add(key);
-    savePicks(); applyPicksToCards(); renderPicksPanel(); updatePicksCount();
+    if (picks.has(key)) {
+      picks.delete(key);
+    } else {
+      picks.add(key);
+    }
+    savePicks();
+    applyPicksToCards();
+    renderPicksPanel();
+    updatePicksCount();
   }
 
   function applyPicksToCards() {
     document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
       const key = cardKey(card);
       const btn = card.querySelector('.pick-btn');
-      const picked = picks.has(key);
-      card.classList.toggle('is-picked', picked);
-      if (btn) btn.classList.toggle('picked', picked);
+      if (picks.has(key)) {
+        card.classList.add('is-picked');
+        if (btn) btn.classList.add('picked');
+      } else {
+        card.classList.remove('is-picked');
+        if (btn) btn.classList.remove('picked');
+      }
     });
   }
 
   function renderPicksPanel() {
     const grid = document.getElementById('picks-grid');
     grid.innerHTML = '';
+
     if (picks.size === 0) {
-      grid.innerHTML = '<div class="picks-empty"><span class="big">&#9733;</span>No picks yet.<br>Star any card in <strong>Explore HMWs</strong> to save it here.</div>';
+      grid.innerHTML = '<div class="picks-empty"><span class="big">★</span>No picks yet.<br>Star any card in <strong>Explore HMWs</strong> to save it here.</div>';
       return;
     }
+
+    // Find matching source cards and clone them
     document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
       const key = cardKey(card);
       if (!picks.has(key)) return;
+
       const clone = card.cloneNode(true);
+      // Remove onclick attribute that references the explore grid's toggleCard
       clone.removeAttribute('onclick');
-      clone.querySelector('.pick-btn') && clone.querySelector('.pick-btn').remove();
-      clone.querySelector('.journal-this-btn') && clone.querySelector('.journal-this-btn').remove();
+      // Remove the star button from clone — replace with a deselect button
+      const oldBtn = clone.querySelector('.pick-btn');
+      if (oldBtn) oldBtn.remove();
 
       const removeBtn = document.createElement('button');
       removeBtn.className = 'pick-btn picked';
-      removeBtn.innerHTML = '&#9733;';
+      removeBtn.innerHTML = '★';
       removeBtn.title = 'Remove from My Picks';
       removeBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        picks.delete(key); savePicks(); applyPicksToCards(); renderPicksPanel(); updatePicksCount();
+        picks.delete(key);
+        savePicks();
+        applyPicksToCards();
+        renderPicksPanel();
+        updatePicksCount();
       });
       clone.style.position = 'relative';
       clone.appendChild(removeBtn);
 
-      const clonePrompt = clone.querySelector('.card-prompt');
-      if (clonePrompt) {
-        const jBtn = document.createElement('button');
-        jBtn.className = 'journal-this-btn';
-        jBtn.textContent = '\u270e Journal this prompt';
-        jBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const origCard = [...document.querySelectorAll('#hmw-grid .hmw-card')].find(c => cardKey(c) === key);
-          if (origCard) openJournalFromCard(origCard);
-        });
-        clonePrompt.appendChild(jBtn);
-      }
-
+      // Expand/collapse still works on clones
       clone.addEventListener('click', function() {
         const wasExpanded = this.classList.contains('expanded');
         grid.querySelectorAll('.hmw-card').forEach(c => c.classList.remove('expanded'));
         if (!wasExpanded) this.classList.add('expanded');
       });
+
+      // Remove animation so clones appear instantly
       clone.style.animation = 'none';
       clone.style.opacity = '1';
       clone.style.transform = 'none';
+
       grid.appendChild(clone);
     });
   }
 
   function updatePicksCount() {
     const el = document.getElementById('picks-count');
-    if (el) el.textContent = picks.size > 0 ? '(' + picks.size + ')' : '';
+    if (el) el.textContent = picks.size > 0 ? `(${picks.size})` : '';
   }
 
-  function clearAllPicks() {
+  async function clearAllPicks() {
     if (picks.size === 0) return;
-    picks.clear(); savePicks(); applyPicksToCards(); renderPicksPanel(); updatePicksCount();
+    picks.clear();
+    await savePicks();
+    applyPicksToCards();
+    renderPicksPanel();
+    updatePicksCount();
   }
 
   // ── Tab switching ─────────────────────────────────────────────────────────
@@ -1676,7 +1361,41 @@
     event.target.classList.add('active');
     document.getElementById('panel-' + id).classList.add('active');
     if (id === 'picks') renderPicksPanel();
-    if (id === 'journal') renderJournalSidebar();
+  }
+
+  // ── Export / Print to PDF ─────────────────────────────────────────────────
+  function exportPDF() {
+    // Find the currently active panel
+    const activePanel = document.querySelector('.panel.active');
+    if (!activePanel) return;
+
+    // Mark it as print target
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('print-target'));
+    activePanel.classList.add('print-target');
+
+    // Update the print note
+    const tabLabel = document.querySelector('.tab.active');
+    const tabName = tabLabel ? tabLabel.textContent.trim() : 'View';
+    activePanel.querySelectorAll('.print-header-note').forEach(n => n.remove());
+    const note = document.createElement('div');
+    note.className = 'print-header-note';
+    note.textContent = `Peter's How Might We — Designing Your Life · ${tabName} · ${new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })}`;
+    activePanel.prepend(note);
+
+    // Expand all cards so prompts are visible in print
+    if (activePanel.id === 'panel-explore' || activePanel.id === 'panel-picks') {
+      activePanel.querySelectorAll('.hmw-card').forEach(c => c.classList.add('expanded'));
+    }
+
+    window.print();
+
+    // Restore after print dialog closes
+    setTimeout(() => {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('print-target'));
+      if (activePanel.id === 'panel-explore' || activePanel.id === 'panel-picks') {
+        activePanel.querySelectorAll('.hmw-card').forEach(c => c.classList.remove('expanded'));
+      }
+    }, 1000);
   }
 
   function toggleCard(el) {
@@ -1689,288 +1408,19 @@
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
-      const show = value === 'all' || card.dataset.value === value;
-      card.style.display = show ? '' : 'none';
-      if (show) card.style.opacity = '';
-    });
-  }
-
-  // ── JOURNAL ───────────────────────────────────────────────────────────────
-  function loadJournal() {
-    try {
-      const raw = localStorage.getItem(JOURNAL_KEY);
-      if (raw) journalEntries = JSON.parse(raw);
-    } catch (e) { journalEntries = []; }
-    updateJournalCount();
-  }
-
-  function saveJournal() {
-    try { localStorage.setItem(JOURNAL_KEY, JSON.stringify(journalEntries)); } catch (e) {}
-    updateJournalCount();
-  }
-
-  function updateJournalCount() {
-    const el = document.getElementById('journal-count');
-    if (el) el.textContent = journalEntries.length > 0 ? '(' + journalEntries.length + ')' : '';
-  }
-
-  function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  }
-
-  function formatDate(isoStr) {
-    return new Date(isoStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  }
-
-  function openJournalFromCard(card) {
-    const hmwEl = card.querySelector('.card-hmw');
-    const promptEl = card.querySelector('.card-prompt');
-    const valueTag = card.querySelector('.card-value-tag');
-
-    const hmwText = hmwEl ? hmwEl.innerText.trim() : '';
-    const promptClone = promptEl ? promptEl.cloneNode(true) : null;
-    const jb = promptClone && promptClone.querySelector('.journal-this-btn');
-    if (jb) jb.remove();
-    const promptText = promptClone ? promptClone.innerText.trim() : '';
-    const source = valueTag ? valueTag.innerText.trim() : '';
-
-    // Strip HTML tags from hmwText to use as plain title
-    const tmpDiv = document.createElement('div');
-    tmpDiv.innerHTML = hmwText;
-    const hmwPlain = tmpDiv.innerText.trim();
-
-    const entry = {
-      id: generateId(), title: hmwPlain,
-      prompt: promptText, promptHmw: hmwText, promptSource: source,
-      body: '', date: new Date().toISOString(), updated: new Date().toISOString()
-    };
-    journalEntries.unshift(entry);
-    saveJournal();
-    switchToJournalTab();
-    renderJournalSidebar();
-    openEntry(entry.id);
-    setTimeout(() => { const t = document.getElementById('editor-title'); if (t) t.focus(); }, 120);
-  }
-
-  function switchToJournalTab() {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    const journalTab = [...document.querySelectorAll('.tab')].find(t => t.textContent.includes('Journal'));
-    if (journalTab) journalTab.classList.add('active');
-    const panel = document.getElementById('panel-journal');
-    if (panel) panel.classList.add('active');
-  }
-
-  function newJournalEntry() {
-    if (unsaved && currentEntryId) saveCurrentEntry(true);
-    const entry = {
-      id: generateId(), title: '', prompt: '', promptHmw: '', promptSource: '',
-      body: '', date: new Date().toISOString(), updated: new Date().toISOString()
-    };
-    journalEntries.unshift(entry);
-    saveJournal();
-    renderJournalSidebar();
-    openEntry(entry.id);
-    setTimeout(() => { const t = document.getElementById('editor-title'); if (t) t.focus(); }, 80);
-  }
-
-  function openEntry(id) {
-    if (unsaved && currentEntryId && currentEntryId !== id) saveCurrentEntry(true);
-    currentEntryId = id;
-    const entry = journalEntries.find(e => e.id === id);
-    if (!entry) return;
-
-    document.getElementById('journal-empty-state').style.display = 'none';
-    const editorEl = document.getElementById('journal-editor');
-    editorEl.style.display = 'flex';
-    editorEl.style.flexDirection = 'column';
-
-    const banner = document.getElementById('editor-prompt-banner');
-    const hmwLink = document.getElementById('editor-hmw-link');
-    if (entry.prompt) {
-      banner.classList.add('visible');
-      document.getElementById('editor-prompt-text').textContent = entry.prompt;
-      document.getElementById('editor-prompt-source').textContent = entry.promptSource ? '\u2014 ' + entry.promptSource : '';
-      if (entry.promptHmw) {
-        hmwLink.style.display = 'inline-block';
-        banner.dataset.promptHmw = entry.promptHmw;
+      if (value === 'all' || card.dataset.value === value) {
+        card.style.display = '';
+        card.style.opacity = '';
       } else {
-        hmwLink.style.display = 'none';
-        delete banner.dataset.promptHmw;
-      }
-    } else {
-      banner.classList.remove('visible');
-      if (hmwLink) hmwLink.style.display = 'none';
-    }
-
-    const titleEl = document.getElementById('editor-title');
-    titleEl.value = entry.title;
-    autoResizeTextarea(titleEl);
-    document.getElementById('editor-date').textContent = formatDate(entry.date);
-    document.getElementById('editor-body').innerHTML = entry.body || '';
-
-    unsaved = false;
-    const saveBtn = document.getElementById('editor-save-btn');
-    saveBtn.textContent = 'Save Entry';
-    saveBtn.classList.remove('saved');
-    updateWordCount();
-
-    document.querySelectorAll('.journal-entry-item').forEach(el => {
-      el.classList.toggle('active', el.dataset.id === id);
-    });
-  }
-
-  function saveCurrentEntry(silent) {
-    if (!currentEntryId) return;
-    const entry = journalEntries.find(e => e.id === currentEntryId);
-    if (!entry) return;
-    entry.title = document.getElementById('editor-title').value.trim();
-    entry.body = document.getElementById('editor-body').innerHTML;
-    entry.updated = new Date().toISOString();
-    saveJournal();
-    renderJournalSidebar();
-    unsaved = false;
-    if (!silent) {
-      const saveBtn = document.getElementById('editor-save-btn');
-      saveBtn.textContent = 'Saved \u2713';
-      saveBtn.classList.add('saved');
-      setTimeout(() => { saveBtn.textContent = 'Save Entry'; saveBtn.classList.remove('saved'); }, 2000);
-    }
-    document.querySelectorAll('.journal-entry-item').forEach(el => {
-      el.classList.toggle('active', el.dataset.id === currentEntryId);
-    });
-  }
-
-  function deleteEntry(id, e) {
-    e.stopPropagation();
-    if (!confirm('Delete this entry? This cannot be undone.')) return;
-    journalEntries = journalEntries.filter(function(e) { return e.id !== id; });
-    saveJournal();
-    if (currentEntryId === id) {
-      currentEntryId = null; unsaved = false;
-      document.getElementById('journal-empty-state').style.display = '';
-      document.getElementById('journal-editor').style.display = 'none';
-    }
-    renderJournalSidebar();
-  }
-
-  function renderJournalSidebar() {
-    const list = document.getElementById('journal-entry-list');
-    if (!list) return;
-    if (journalEntries.length === 0) {
-      list.innerHTML = '<div class="journal-empty-sidebar">No entries yet.<br>Start from a card prompt<br>or press <strong>+ New</strong>.</div>';
-      return;
-    }
-    list.innerHTML = journalEntries.map(function(entry) {
-      const rawTitle = entry.title || entry.promptHmw || 'Untitled entry';
-      const tmp = document.createElement('div');
-      tmp.innerHTML = rawTitle;
-      const label = tmp.innerText.replace(/\*/g, '').slice(0, 65) + (tmp.innerText.length > 65 ? '\u2026' : '');
-      const dateStr = new Date(entry.updated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      const isActive = entry.id === currentEntryId;
-      return '<div class="journal-entry-item ' + (isActive ? 'active' : '') + '" data-id="' + entry.id + '" onclick="openEntry(\'' + entry.id + '\')">' +
-        '<div class="entry-item-date">' + dateStr + '</div>' +
-        '<div class="entry-item-title">' + label + '</div>' +
-        '<button class="entry-delete-btn" onclick="deleteEntry(\'' + entry.id + '\', event)" title="Delete">\u2715</button>' +
-        '</div>';
-    }).join('');
-  }
-
-  function goToSourceCard() {
-    const banner = document.getElementById('editor-prompt-banner');
-    const targetHmw = banner && banner.dataset.promptHmw;
-    if (!targetHmw) return;
-
-    // Switch to Explore tab
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    const exploreTab = [...document.querySelectorAll('.tab')].find(t => t.textContent.trim().startsWith('Explore'));
-    if (exploreTab) exploreTab.classList.add('active');
-    document.getElementById('panel-explore').classList.add('active');
-
-    // Reset filter to show all cards
-    const allBtn = document.querySelector('.filter-btn');
-    if (allBtn) filterCards('all', allBtn);
-
-    // Find and expand the matching card
-    let foundCard = null;
-    document.querySelectorAll('#hmw-grid .hmw-card').forEach(card => {
-      const hmwEl = card.querySelector('.card-hmw');
-      if (!hmwEl) return;
-      const tmpDiv = document.createElement('div');
-      tmpDiv.innerHTML = targetHmw;
-      if (hmwEl.innerText.trim() === tmpDiv.innerText.trim()) {
-        foundCard = card;
+        card.style.display = 'none';
       }
     });
-
-    if (foundCard) {
-      // Collapse any open cards, expand this one
-      document.querySelectorAll('#hmw-grid .hmw-card').forEach(c => c.classList.remove('expanded'));
-      foundCard.classList.add('expanded');
-      // Scroll smoothly to it
-      setTimeout(() => {
-        foundCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Brief highlight flash
-        foundCard.style.transition = 'box-shadow 0.3s';
-        foundCard.style.boxShadow = '0 0 0 3px var(--rust)';
-        setTimeout(() => { foundCard.style.boxShadow = ''; }, 1800);
-      }, 100);
-    }
-  }
-
-  function markUnsaved() {
-    unsaved = true;
-    const btn = document.getElementById('editor-save-btn');
-    if (btn) { btn.textContent = 'Save Entry'; btn.classList.remove('saved'); }
-  }
-
-  function updateWordCount() {
-    const body = document.getElementById('editor-body');
-    if (!body) return;
-    const text = body.innerText.trim();
-    const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
-    const el = document.getElementById('editor-word-count');
-    if (el) el.textContent = words + ' word' + (words !== 1 ? 's' : '');
-  }
-
-  function execFmt(cmd) {
-    document.getElementById('editor-body').focus();
-    document.execCommand(cmd, false, null);
-    updateToolbarState();
-    markUnsaved();
-  }
-
-  function updateToolbarState() {
-    ['bold','italic','underline','insertUnorderedList','insertOrderedList'].forEach(function(cmd) {
-      const btn = document.querySelector('.toolbar-btn[data-cmd="' + cmd + '"]');
-      if (btn) btn.classList.toggle('active', document.queryCommandState(cmd));
-    });
-  }
-
-  function handleEditorKeydown(e) {
-    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveCurrentEntry(false); }
-    setTimeout(updateToolbarState, 10);
-  }
-
-  function autoResizeTextarea(el) {
-    el.style.height = 'auto';
-    el.style.height = el.scrollHeight + 'px';
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', () => {
     injectStarButtons();
     loadPicks();
-    loadJournal();
-
-    document.addEventListener('selectionchange', function() {
-      if (document.activeElement && document.activeElement.id === 'editor-body') updateToolbarState();
-    });
-
-    window.addEventListener('beforeunload', function() {
-      if (unsaved && currentEntryId) saveCurrentEntry(true);
-    });
   });
 </script>
 
